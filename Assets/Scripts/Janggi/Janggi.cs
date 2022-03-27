@@ -68,16 +68,22 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         #region 이름 초기화
         switch (janggiType)
         {
-            case Janggi_Type.JA:
-                janggiName.text = "子";
+            case Janggi_Type.JA: janggiName.text = "子"; break;
+            case Janggi_Type.HOO: janggiName.text = "侯"; break;
+            case Janggi_Type.JANG: janggiName.text = "將"; break;
+            case Janggi_Type.SANG: janggiName.text = "相"; break;
+            case Janggi_Type.WANG: janggiName.text = "王"; break;
+            default: Debug.Assert(false); break;
+        }
+        #endregion
 
-                // 자는 위로만 이동 가능
-                dirs[(int)Move_Dir.FRONT].SetActive(true);
-                break;
+        #region 방향 초기화
+        switch (janggiType)
+        {
+            // 자는 위로만 이동 가능
+            case Janggi_Type.JA: dirs[(int)Move_Dir.FRONT].SetActive(true); break;
+            // 후는 뒤쪽 대각선 제외 모든 방향 이동 가능
             case Janggi_Type.HOO:
-                janggiName.text = "侯";
-
-                // 후는 뒤쪽 대각선 제외 모든 방향 이동 가능
                 dirs[(int)Move_Dir.LEFT_FRONT].SetActive(true);
                 dirs[(int)Move_Dir.FRONT].SetActive(true);
                 dirs[(int)Move_Dir.RIGHT_FRONT].SetActive(true);
@@ -87,28 +93,22 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
                 dirs[(int)Move_Dir.BACK].SetActive(true);
                 break;
+            // 장은 전,후,좌,우 이동 가능
             case Janggi_Type.JANG:
-                janggiName.text = "將";
-
-                // 장은 전,후,좌,우 이동 가능
                 dirs[(int)Move_Dir.FRONT].SetActive(true);
                 dirs[(int)Move_Dir.BACK].SetActive(true);
                 dirs[(int)Move_Dir.LEFT].SetActive(true);
                 dirs[(int)Move_Dir.RIGHT].SetActive(true);
                 break;
+            // 상은 대각선 4방향 이동 가능
             case Janggi_Type.SANG:
-                janggiName.text = "相";
-
-                // 상은 대각선 4방향 이동 가능
                 dirs[(int)Move_Dir.LEFT_FRONT].SetActive(true);
                 dirs[(int)Move_Dir.RIGHT_FRONT].SetActive(true);
                 dirs[(int)Move_Dir.LEFT_BACK].SetActive(true);
                 dirs[(int)Move_Dir.RIGHT_BACK].SetActive(true);
                 break;
+            // 왕은 모든 방향 이동 가능
             case Janggi_Type.WANG:
-                janggiName.text = "王";
-
-                // 왕은 모든 방향 이동 가능
                 for (int moveDir = 0; moveDir < (int)Move_Dir.MOVE_DIR_CNT; moveDir++)
                     dirs[moveDir].SetActive(true);
                 break;
