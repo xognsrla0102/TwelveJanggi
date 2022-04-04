@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    protected enum Janggi_Type
+    public enum Janggi_Type
     {
         JA,
         HOO,
@@ -14,14 +13,15 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         WANG,
         JANGGI_TYPE_CNT
     }
-    protected enum Team_Type
+    
+    public enum Team_Type
     {
         RED,
         BLUE,
         TEAM_TYPE_CNT
     }
 
-    protected enum Move_Dir
+    public enum Move_Dir
     {
         LEFT_FRONT,
         FRONT,
@@ -37,11 +37,11 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         MOVE_DIR_CNT
     }
 
-    [SerializeField] protected Janggi_Type janggiType;
-    [SerializeField] protected Team_Type teamType;
-    [SerializeField] protected Text janggiName;
+    [SerializeField] private Janggi_Type janggiType;
+    [SerializeField] private Team_Type teamType;
+    [SerializeField] private Text janggiName;
 
-    [SerializeField] protected GameObject[] dirs;
+    [SerializeField] private GameObject[] dirs;
 
     #region 드래그 & 드롭 속성
     private Transform gamePanel;
@@ -63,7 +63,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         }
     }
 
-    protected virtual void Start()
+    private void Start()
     {
         #region 이름 초기화
         switch (janggiType)
@@ -126,7 +126,6 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         }
         #endregion
     }
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {
