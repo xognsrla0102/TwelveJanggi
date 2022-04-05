@@ -1,27 +1,28 @@
-1. 함수 이름은 동사로 시작한다. 
-WidthApply => ApplyWidth
-====================
-
-2. 이름 짓기 
-공통 규칙 :
-줄임말이 있을 경우 대문자로 쓴다.
+1. 명명법(이름 짓기)
+공통 : 줄임말이 있을 경우 대문자로 쓴다.
 대문자로 띄어써야 할 경우 _로 분리한다.
 
-- 1. 	함수, 프로퍼티는 대문자로 시작한다. 
+- 1. 	함수 이름은 동사로 시작한다. 
+	WidthApply => ApplyWidth
+
+- 2. 	함수, 프로퍼티는 대문자로 시작한다. 
 	public void TCP_IP_Test()
 	public int HP { get; private set; }
 	public int Score { get; set; }
 
-- 2. 	변수는 소문자로 시작하고, 명사로 짓는다.
+- 3. 	변수는 소문자로 시작하고, 명사로 짓는다.
 	string fileText;
 
-- 3.	배열, 리스트 처럼 여러 요소가 있는 자료형의 경우 복수형으로 짓는다.
+- 4.	배열, 리스트 처럼 여러 요소가 있는 자료형의 경우 복수형으로 짓는다.
 	string[] fileTexts; List<int> slotNums;
 
-- 4.	bool 변수는 조동사 또는 be동사로 시작한다.
+- 5.	bool 변수는 조동사 또는 be동사로 시작한다.
 	bool isDead, bool canSave
 
-- 5.	재귀 함수는 함수명 끝에 Recursive를 붙인다.
+- 6.	enum 변수, 상수(const)는 모두 대문자로 표현한다.
+	const int HP_MAX = 100;
+
+- 7.	재귀 함수는 함수명 끝에 Recursive를 붙인다.
 	public void CheckSlotRecursive(어떤 변수)
 	{
 		if (재귀 종료 조건) return;
@@ -141,7 +142,7 @@ public void Function()
 }
 ==================================================
 
-- 10.	바로 return 되는 경우가 아니라면 반드시 스코프를 사용할 것
+10.	스코프를 사용하는 문법의 경우 바로 return 되는 경우가 아니라면, 한 줄 짜리 코드라도 반드시 스코프를 사용할 것
 	if (어떤 조건)
 	{
 		Debug.Log("하하 스코프를 사용한다");
@@ -151,4 +152,21 @@ public void Function()
 	{
 		Debug.Log("한 줄 짜리 코드지만 스코프를 사용한다.");
 	}
+==================================================
+
+11. 접근 제한자는 항상 명시해줄 것 (private 생략 금지)
+public class Player
+{
+    // private은 생략할 수 있지만 명시해준다
+    [SerializeField] Bullet bulletPrefab; -> [SerializeField] private Bullet bulletPrefab;
+    string name; -> private string name;   
+}
+==================================================
+
+12.	변수 값, 접미사 규칙
+- 1.	숫자의 길이가 길 경우 모던 C# 문법으로 표현한다.
+	public const int MAX_VALUE = 999_999_999;
+
+- 2.	float 변수의 경우 .0으로 끝날경우 f를 바로 사용한다.
+	public float bulletRot = 30.0f; -> public float bulletRot = 30f;
 ==================================================
