@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 61170120}
   - component: {fileID: 61170123}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &113983310
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,7 +318,7 @@ GameObject:
   - component: {fileID: 120950866}
   - component: {fileID: 120950869}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -407,6 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &157566863
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,7 +423,7 @@ GameObject:
   - component: {fileID: 157566865}
   - component: {fileID: 157566868}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -510,6 +512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &230184096
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,6 +523,7 @@ GameObject:
   m_Component:
   - component: {fileID: 230184097}
   - component: {fileID: 230184098}
+  - component: {fileID: 230184099}
   m_Layer: 5
   m_Name: Map
   m_TagString: Untagged
@@ -582,6 +586,18 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
   m_ConstraintCount: 3
+--- !u!114 &230184099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230184096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b70da97fad44e04cb9d302757a8e63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &336745557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -721,7 +737,7 @@ GameObject:
   - component: {fileID: 340843970}
   - component: {fileID: 340843973}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -811,6 +827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1001 &354068372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -822,6 +839,11 @@ PrefabInstance:
         type: 3}
       propertyPath: teamType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158031286487374000, guid: f2af0a61c36ce264c8221e25a9979de5,
+        type: 3}
+      propertyPath: janggiType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4456248477450007268, guid: f2af0a61c36ce264c8221e25a9979de5,
         type: 3}
@@ -1115,7 +1137,7 @@ GameObject:
   - component: {fileID: 602927791}
   - component: {fileID: 602927794}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1204,6 +1226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!224 &791419254 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4456248477450007268, guid: ea2f5fbd0422aca4b9cf57387c18ea7a,
@@ -1224,7 +1247,7 @@ GameObject:
   - component: {fileID: 804718317}
   - component: {fileID: 804718320}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1314,6 +1337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1437,11 @@ PrefabInstance:
         type: 3}
       propertyPath: teamType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158031286487374000, guid: ea2f5fbd0422aca4b9cf57387c18ea7a,
+        type: 3}
+      propertyPath: janggiType
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4456248477450007268, guid: ea2f5fbd0422aca4b9cf57387c18ea7a,
         type: 3}
@@ -1546,7 +1575,7 @@ GameObject:
   - component: {fileID: 1084008910}
   - component: {fileID: 1084008913}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1636,6 +1665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &1103426545
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,7 +1970,7 @@ GameObject:
   - component: {fileID: 1188860579}
   - component: {fileID: 1188860582}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2030,6 +2060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &1451287170
 GameObject:
   m_ObjectHideFlags: 0
@@ -2087,7 +2118,7 @@ GameObject:
   - component: {fileID: 1634904678}
   - component: {fileID: 1634904681}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2177,6 +2208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1001 &1690466855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2198,6 +2230,11 @@ PrefabInstance:
         type: 3}
       propertyPath: teamType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3080902668220611982, guid: 757338859fde4634face61a6d0cd2184,
+        type: 3}
+      propertyPath: janggiType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4456248477450007268, guid: 757338859fde4634face61a6d0cd2184,
         type: 3}
@@ -2356,7 +2393,7 @@ GameObject:
   - component: {fileID: 1823242434}
   - component: {fileID: 1823242437}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2445,6 +2482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1001 &1829114813
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2456,6 +2494,11 @@ PrefabInstance:
         type: 3}
       propertyPath: teamType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3158031286487374000, guid: a045cfa7108ddad41b9254a6e883dd8d,
+        type: 3}
+      propertyPath: janggiType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4456248477450007268, guid: a045cfa7108ddad41b9254a6e883dd8d,
         type: 3}
@@ -2714,7 +2757,7 @@ GameObject:
   - component: {fileID: 1980649924}
   - component: {fileID: 1980649927}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2803,6 +2846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}
 --- !u!1 &2003713176
 GameObject:
   m_ObjectHideFlags: 0
@@ -2817,7 +2861,7 @@ GameObject:
   - component: {fileID: 2003713178}
   - component: {fileID: 2003713181}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: Slot_10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2907,3 +2951,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f21e03d8dbc9774eb8efea74b168c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {x: 0, y: 0}

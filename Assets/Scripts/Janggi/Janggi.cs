@@ -37,26 +37,28 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         MOVE_DIR_CNT
     }
 
-    [SerializeField] private Janggi_Type janggiType;
+    public Vector2 curpos;
+
+    public Janggi_Type janggiType;
     [SerializeField] private Team_Type teamType;
     [SerializeField] private Text janggiName;
 
     [SerializeField] private GameObject[] dirs;
-
+   
     #region 드래그 & 드롭 속성
     private Transform gamePanel;
-    private Transform originParent;
+    public Transform originParent;
     private RectTransform rectTransform;
     // 장기 하위 오브젝트들도 변화해야하므로 캔버스 그룹으로 처리
     private CanvasGroup canvasGroup;
     #endregion
-
+    
     private void Awake()
     {
         gamePanel = GameObject.Find("GamePanel").GetComponent<Transform>();
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-
+        
         foreach (var dir in dirs)
         {
             dir.SetActive(false);
@@ -125,13 +127,15 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             default: Debug.Assert(false); break;
         }
         #endregion
+
+        curpos = GetComponentInParent<Slot>().pos;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         // 이상한 곳 드롭 시 원래 위치 되돌아갈 위치 저장
         originParent = transform.parent;
-
+        
         // 부모 변경 및 최상단 이동(UI 가림 처리)
         transform.SetParent(gamePanel);
         transform.SetAsLastSibling();
@@ -145,6 +149,8 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     {
         // 장기 위치를 마우스 위치로 이동
         rectTransform.position = eventData.position;
+
+        
     }
     
     public void OnEndDrag(PointerEventData eventData)
@@ -158,6 +164,8 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             rectTransform.position = originParent.GetComponent<RectTransform>().position;
         }
 
+        //이동한 Slot의 위치 pos를 가져옴.
+        curpos = GetComponentInParent<Slot>().pos;
         // 캔버스 그룹 설정 되돌림
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
