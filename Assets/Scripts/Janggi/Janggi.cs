@@ -37,15 +37,20 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         MOVE_DIR_CNT
     }
 
-    public Vector2 curpos;
+    
     public Janggi_Type janggiType;
     public Team_Type teamType;
-    public bool isCaptive;
+    
 
     [SerializeField] private Text janggiName;
     [SerializeField] private GameObject[] dirs;
-    
+    public Vector2 curpos;
+    [HideInInspector] public bool isCaptive;
+    private Slot[,] slots = new Slot[4,3];
     private Transform captivePanel;
+    private int[] dx = new int[] { -1,  0,  1,-1, 1,-1, 0, 1 };
+    private int[] dy = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
+
     #region 드래그 & 드롭 속성
     private Transform gamePanel;
     public Transform originParent;
@@ -58,6 +63,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     {
         gamePanel = GameObject.Find("GamePanel").GetComponent<Transform>();
         captivePanel = GameObject.Find("Content").GetComponent<Transform>();
+        
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         
@@ -121,16 +127,11 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         #endregion
 
         #region 색상 초기화
-        var outLine = GetComponent<Outline>();
-        switch (teamType)
-        {
-            case Team_Type.RED: outLine.effectColor = Color.red; break;
-            case Team_Type.BLUE: outLine.effectColor = new Color(0, 140 / 255f, 1); break;
-            default: Debug.Assert(false); break;
-        }
+        SetColor();
         #endregion
 
         curpos = GetComponentInParent<Slot>().pos;
+        slots = GameObject.Find("Map").GetComponent<Map>().maps;
     }
 
     public void SetColor()
@@ -146,6 +147,16 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        isCaptive = transform.parent == captivePanel;
+
+        for (int y =0; y < slots.GetLength(0); y++)
+        {
+            for(int x=0; x<slots.GetLength(1); x++)
+            {
+                slots[y, x].canPut = false;
+            }
+        }
+
         // 이상한 곳 드롭 시 원래 위치 되돌아갈 위치 저장
         originParent = transform.parent;
         
@@ -156,6 +167,15 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         // 투명 처리 및 레이캐스트 무시
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
+        for(int i =0; i < (int)Move_Dir.MOVE_DIR_CNT; i++)
+        {
+            if (dirs[i].activeInHierarchy == false) continue;
+            if ((int)curpos.y + dy[i] > 3 || (int)curpos.y + dy[i] < 0 || (int)curpos.x + dx[i] > 2 || (int)curpos.x + dx[i] < 0) continue;
+
+            slots[(int)curpos.y + dy[i], (int)curpos.x + dx[i]].canPut = true;
+
+        }
+        
     }
     
     public void OnDrag(PointerEventData eventData)
@@ -179,16 +199,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             // 기존 부모 설정 및 위치 되돌림
             transform.SetParent(originParent);
             rectTransform.position = originParent.GetComponent<RectTransform>().position;
-        }
-
-        if(transform.parent == captivePanel)
-        {
-            isCaptive = true;
-        }
-        else
-        {
-            isCaptive = false;
-        }    
+        }          
 
         //이동한 Slot의 위치 pos를 가져옴.
         var slot = GetComponentInParent<Slot>();
