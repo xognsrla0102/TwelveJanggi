@@ -19,8 +19,8 @@ public class Map : MonoBehaviour
                 //n번째 자식을 maps[y,x]에 넣는다.
                 maps[y, x] = gameObject.transform.GetChild(child);
 
-                Slot curmap = maps[y, x].GetComponent<Slot>();
-                curmap.pos = new Vector2(x, y);
+                var slots = maps[y, x].GetComponent<Slot>();
+                slots.pos = new Vector2(x, y);
                 child++;
             }
         }

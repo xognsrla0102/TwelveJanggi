@@ -7,12 +7,15 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        
-        // 드래그 대상이 있다면
-        if (eventData.pointerDrag != null)
-        {
-            Janggi curUnit = eventData.pointerDrag.GetComponent<Janggi>();
 
+        // 드래그 대상이 없다면.
+        if (eventData.pointerDrag == null) return;
+
+        var curUnit = eventData.pointerDrag.GetComponent<Janggi>();
+
+        if (curUnit == null) return;
+        if (!curUnit.isCaptive)
+        {
             switch (curUnit.janggiType)
             {
                 case Janggi.Janggi_Type.JA:
@@ -36,17 +39,29 @@ public class Slot : MonoBehaviour, IDropHandler
 
             // 자식이 있을 경우 다른 장기가 있다는 의미이므로 일단 무시 나중에 적일 경우 먹는 코드 추가
             if (transform.childCount != 0)
-
             {
-                Destroy(transform.GetChild(0).gameObject);
-            }
-            
-            
-            
-            // 그 대상의 부모를 이 슬롯으로 설정 및 위치 설정
+                //자식이 같은 팀일경우엔 넘어간다.
+                if (transform.GetComponentInChildren<Janggi>().teamType == curUnit.teamType) return;
 
-            eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.GetComponent<RectTransform>().localPosition = Vector3.zero;
+                var captrans = GameObject.Find("Content").transform;
+                var childObj = transform.GetChild(0);
+                childObj.SetParent(captrans);
+
+                childObj.GetComponent<Janggi>().teamType = Janggi.Team_Type.BLUE;
+                childObj.GetComponent<Janggi>().SetColor();
+                childObj.GetComponent<RectTransform>().localPosition = Vector3.zero;
+                childObj.GetComponent<RectTransform>().localRotation = Quaternion.identity;
+            }
         }
+        else
+        {
+            if (pos.y == 0 || transform.childCount !=0) return;
+        }
+        // 그 대상의 부모를 이 슬롯으로 설정 및 위치 설정
+
+        eventData.pointerDrag.transform.SetParent(transform);
+        eventData.pointerDrag.GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+
     }
 }

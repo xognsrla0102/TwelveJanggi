@@ -38,13 +38,14 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     }
 
     public Vector2 curpos;
-
     public Janggi_Type janggiType;
-    [SerializeField] private Team_Type teamType;
-    [SerializeField] private Text janggiName;
+    public Team_Type teamType;
+    public bool isCaptive;
 
+    [SerializeField] private Text janggiName;
     [SerializeField] private GameObject[] dirs;
-   
+    
+    private Transform captivePanel;
     #region 드래그 & 드롭 속성
     private Transform gamePanel;
     public Transform originParent;
@@ -56,6 +57,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     private void Awake()
     {
         gamePanel = GameObject.Find("GamePanel").GetComponent<Transform>();
+        captivePanel = GameObject.Find("Content").GetComponent<Transform>();
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         
@@ -131,6 +133,17 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         curpos = GetComponentInParent<Slot>().pos;
     }
 
+    public void SetColor()
+    {
+        var outLine = GetComponent<Outline>();
+        switch (teamType)
+        {
+            case Team_Type.RED: outLine.effectColor = Color.red; break;
+            case Team_Type.BLUE: outLine.effectColor = new Color(0, 140 / 255f, 1); break;
+            default: Debug.Assert(false); break;
+        }
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         // 이상한 곳 드롭 시 원래 위치 되돌아갈 위치 저장
@@ -149,12 +162,16 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     {
         // 장기 위치를 마우스 위치로 이동
         rectTransform.position = eventData.position;
-
-        
+     
     }
     
     public void OnEndDrag(PointerEventData eventData)
     {
+
+        // 캔버스 그룹 설정 되돌림
+        canvasGroup.alpha = 1f;
+        canvasGroup.blocksRaycasts = true;
+
         // 드래그 종료 시에도 부모가 gamePanel 그대로라면
         // 드롭을 다른 곳에 제대로 안해서 부모 설정이 안됬다는 뜻
         if (transform.parent == gamePanel)
@@ -164,10 +181,18 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             rectTransform.position = originParent.GetComponent<RectTransform>().position;
         }
 
+        if(transform.parent == captivePanel)
+        {
+            isCaptive = true;
+        }
+        else
+        {
+            isCaptive = false;
+        }    
+
         //이동한 Slot의 위치 pos를 가져옴.
-        curpos = GetComponentInParent<Slot>().pos;
-        // 캔버스 그룹 설정 되돌림
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = true;
+        var slot = GetComponentInParent<Slot>();
+        if (slot == null) return;
+        curpos = slot.pos;
     }
 }
