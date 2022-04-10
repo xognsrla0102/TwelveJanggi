@@ -76,6 +76,23 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     private void Start()
     {
         #region 이름 초기화
+        SetName();
+        #endregion
+
+        #region 방향 초기화
+        SetDir();
+        #endregion
+
+        #region 색상 초기화
+        SetColor();
+        #endregion
+
+        curpos = GetComponentInParent<Slot>().pos;
+        slots = GameObject.Find("Map").GetComponent<Map>().maps;
+    }
+
+    public void SetName()
+    {
         switch (janggiType)
         {
             case Janggi_Type.JA: janggiName.text = "子"; break;
@@ -85,9 +102,23 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             case Janggi_Type.WANG: janggiName.text = "王"; break;
             default: Debug.Assert(false); break;
         }
-        #endregion
+    }
+    public void SetColor()
+    {
+        var outLine = GetComponent<Outline>();
+        switch (teamType)
+        {
+            case Team_Type.RED: outLine.effectColor = Color.red; break;
+            case Team_Type.BLUE: outLine.effectColor = new Color(0, 140 / 255f, 1); break;
+            default: Debug.Assert(false); break;
+        }
+    }
+    public void SetDir()
+    {
 
-        #region 방향 초기화
+        for (int moveDir = 0; moveDir < (int)Move_Dir.MOVE_DIR_CNT; moveDir++)
+            dirs[moveDir].SetActive(false);       
+
         switch (janggiType)
         {
             // 자는 위로만 이동 가능
@@ -124,25 +155,6 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
                 break;
             default: Debug.Assert(false); break;
         }
-        #endregion
-
-        #region 색상 초기화
-        SetColor();
-        #endregion
-
-        curpos = GetComponentInParent<Slot>().pos;
-        slots = GameObject.Find("Map").GetComponent<Map>().maps;
-    }
-
-    public void SetColor()
-    {
-        var outLine = GetComponent<Outline>();
-        switch (teamType)
-        {
-            case Team_Type.RED: outLine.effectColor = Color.red; break;
-            case Team_Type.BLUE: outLine.effectColor = new Color(0, 140 / 255f, 1); break;
-            default: Debug.Assert(false); break;
-        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -173,7 +185,6 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             if ((int)curpos.y + dy[i] > 3 || (int)curpos.y + dy[i] < 0 || (int)curpos.x + dx[i] > 2 || (int)curpos.x + dx[i] < 0) continue;
 
             slots[(int)curpos.y + dy[i], (int)curpos.x + dx[i]].canPut = true;
-
         }
         
     }
@@ -181,8 +192,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     public void OnDrag(PointerEventData eventData)
     {
         // 장기 위치를 마우스 위치로 이동
-        rectTransform.position = eventData.position;
-     
+        rectTransform.position = eventData.position;  
     }
     
     public void OnEndDrag(PointerEventData eventData)
@@ -199,11 +209,22 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             // 기존 부모 설정 및 위치 되돌림
             transform.SetParent(originParent);
             rectTransform.position = originParent.GetComponent<RectTransform>().position;
-        }          
+        }
 
         //이동한 Slot의 위치 pos를 가져옴.
         var slot = GetComponentInParent<Slot>();
         if (slot == null) return;
         curpos = slot.pos;
+
+        if (curpos.y == 0)
+        {
+            if (janggiType != Janggi_Type.JA) return;
+
+            janggiType = Janggi_Type.HOO;
+            SetDir();
+            SetName();
+        }
+
+        
     }
 }

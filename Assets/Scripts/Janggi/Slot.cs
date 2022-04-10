@@ -37,6 +37,14 @@ public class Slot : MonoBehaviour, IDropHandler
 
                 var childRectTransform = childObj.GetComponent<RectTransform>();
 
+
+                if(childObjJanggi.janggiType == Janggi.Janggi_Type.HOO)
+                {
+                    childObjJanggi.janggiType = Janggi.Janggi_Type.JA;
+                    childObjJanggi.SetName();
+                    childObjJanggi.SetDir();                  
+                }
+
                 childRectTransform.localPosition = Vector3.zero;
                 childRectTransform.localRotation = Quaternion.identity;
             }
