@@ -201,7 +201,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &242512051
 RectTransform:
@@ -2899,6 +2899,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09830b6919158654ab6eaea936c88c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileImage: {fileID: 2028483419}
+  userNameText: {fileID: 1826175585}
 --- !u!4 &1635581957
 Transform:
   m_ObjectHideFlags: 0
@@ -2926,6 +2928,7 @@ GameObject:
   - component: {fileID: 1661577513}
   - component: {fileID: 1661577512}
   - component: {fileID: 1661577511}
+  - component: {fileID: 1661577514}
   m_Layer: 5
   m_Name: SurrenderButton
   m_TagString: Untagged
@@ -3036,6 +3039,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661577509}
   m_CullTransparentMesh: 1
+--- !u!114 &1661577514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661577509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741eecd2688e53542a194f4d5b5e20f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1703744854
 GameObject:
   m_ObjectHideFlags: 0

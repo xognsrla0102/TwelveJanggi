@@ -1,14 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IngameScene : MonoBehaviour
 {
+    [SerializeField] private RawImage profileImage;
+    [SerializeField] private TextMeshProUGUI userNameText;
+
     private void Start()
     {
         SoundManager.Instance.PlayBGM(SBgmName.MAIN_BGM);
 
-        // ¼± Á¤ÇÏ±â
+        profileImage.texture = UserManager.Instance.profileTexture;
+        userNameText.text = UserManager.Instance.userName;
+
+        // ì„  ì •í•˜ê¸°
         //NetworkManager.Instance.
     }
+
 }
