@@ -1,54 +1,52 @@
-using UnityEngine;
-using UnityEngine.Networking;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEditor.XR;
 
 public class NetworkManager : Singleton<NetworkManager>
 {
     private void Start()
     {
-        // È£½ºÆ®°¡ ¾ÀÀ» ÀÌµ¿ÇÒ ¶§, ´Ù¸¥ Å¬¶óÀÌ¾ğÆ®µéµµ ¾ÀÀ» ÀÌµ¿ÇÏ°Ô ÇÏ¸é¼­ µ¿½Ã¿¡, ¾ÀÀ» µ¿±âÈ­½ÃÄÑÁÜ.
-        // (¼­·Î ¾ÀÀÌ ´Ş¶ó¼­ °°Àº Æ÷Åæ ºä °³Ã¼¸¦ ¸ø Ã£¾Æ¼­ RPCÇÔ¼ö È£ÃâÀÌ ¾ÃÈ÷´Â ¹®Á¦¸¦ ¸·À» ¼ö ÀÖÀ½[RPC ¼Õ½Ç ¹æÁö])
+        // í˜¸ìŠ¤íŠ¸ê°€ ì”¬ì„ ì´ë™í•  ë•Œ, ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ë“¤ë„ ì”¬ì„ ì´ë™í•˜ê²Œ í•˜ë©´ì„œ ë™ì‹œì—, ì”¬ì„ ë™ê¸°í™”ì‹œì¼œì¤Œ.
+        // (ì„œë¡œ ì”¬ì´ ë‹¬ë¼ì„œ ê°™ì€ í¬í†¤ ë·° ê°œì²´ë¥¼ ëª» ì°¾ì•„ì„œ RPCí•¨ìˆ˜ í˜¸ì¶œì´ ì”¹íˆëŠ” ë¬¸ì œë¥¼ ë§‰ì„ ìˆ˜ ìˆìŒ[RPC ì†ì‹¤ ë°©ì§€])
         PhotonNetwork.AutomaticallySyncScene = true;
 
-        // µ¿±âÈ­ ¼Óµµ ´Ã·Á¼­ À¯Àú ÀÌµ¿ÀÌ ²÷¾îÁ® º¸ÀÌÁö ¾Ê°Ô ÇÔ
+        // ë™ê¸°í™” ì†ë„ ëŠ˜ë ¤ì„œ ìœ ì € ì´ë™ì´ ëŠì–´ì ¸ ë³´ì´ì§€ ì•Šê²Œ í•¨
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
     }
 
     public void ConnectMasterServer()
     {
-        print("¸¶½ºÅÍ ¼­¹ö Á¢¼Ó ½Ãµµ");
+        print("ë§ˆìŠ¤í„° ì„œë²„ ì ‘ì† ì‹œë„");
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
         base.OnConnectedToMaster();
-        print("¸¶½ºÅÍ ¼­¹ö¿¡ ¿¬°á ¿Ï·á");
+        print("ë§ˆìŠ¤í„° ì„œë²„ì— ì—°ê²° ì™„ë£Œ");
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        print($"¿¬°á ²÷±è. ÀÌÀ¯ [{cause}]");
+        print($"ì—°ê²° ëŠê¹€. ì´ìœ  [{cause}]");
 
         SceneManager.LoadScene(SSceneName.MAIN_SCENE);
 
         //switch (cause)
         //{
         //    case DisconnectCause.DisconnectByClientLogic:
-        //        print("Å¸ÀÌÆ²·Î ÀÌµ¿");
+        //        print("íƒ€ì´í‹€ë¡œ ì´ë™");
         //        SceneManager.LoadScene(SSceneName.MAIN_SCENE);
         //        break;
         //    default:
         //        OKPopup popup = Popup.CreateErrorPopup("Server Disconnected", $"{cause}") as OKPopup;
         //        popup.SetOKBtnAction(() =>
         //        {
-        //            print("¼­¹ö ²÷±èÀ¸·Î ÀÎÇÑ Å¸ÀÌÆ² ¾À ÀÌµ¿");
+        //            print("ì„œë²„ ëŠê¹€ìœ¼ë¡œ ì¸í•œ íƒ€ì´í‹€ ì”¬ ì´ë™");
         //            LoadingManager.LoadScene(SSceneName.TITLE_SCENE);
         //        });
         //        break;
@@ -58,32 +56,32 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnJoinedLobby()
     {
         base.OnJoinedLobby();
-        print("·Îºñ ¼­¹ö Á¢¼Ó ¿Ï·á");
+        print("ë¡œë¹„ ì„œë²„ ì ‘ì† ì™„ë£Œ");
 
-        print("¸ŞÀÎ ¾ÀÀ¸·Î ÀÌµ¿");
+        print("ë©”ì¸ ì”¬ìœ¼ë¡œ ì´ë™");
         SceneManager.LoadScene(SSceneName.MAIN_SCENE);
     }
 
     public void LeaveLobby()
     {
-        print("·Îºñ ¶°³ª±â ½Ãµµ");
+        print("ë¡œë¹„ ë– ë‚˜ê¸° ì‹œë„");
         PhotonNetwork.LeaveLobby();
     }
 
     public override void OnLeftLobby()
     {
         base.OnLeftLobby();
-        print("·Îºñ ¶°³²");
+        print("ë¡œë¹„ ë– ë‚¨");
 
-        print("¸¶½ºÅÍ ¼­¹ö ¿¬°á ÇØÁ¦");
+        print("ë§ˆìŠ¤í„° ì„œë²„ ì—°ê²° í•´ì œ");
         PhotonNetwork.Disconnect();
     }
 
     public void OnJoinRandomRoom()
     {
-        print("¹æ Âü°¡ È¤Àº »ı¼º");
+        print("ë°© ì°¸ê°€ í˜¹ì€ ìƒì„±");
 
-        // 2¸í Âü°¡ °¡´ÉÇÑ ¹æ
+        // 2ëª… ì°¸ê°€ ê°€ëŠ¥í•œ ë°©
         PhotonNetwork.JoinRandomOrCreateRoom(null, 0, MatchmakingMode.FillRoom,
             null, null, null, new RoomOptions { MaxPlayers = 2}, null);
     }
@@ -91,33 +89,34 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         base.OnCreateRoomFailed(returnCode, message);
-        Debug.Log($"¹æ »ı¼º ½ÇÆĞ :\nÄÚµå : {returnCode}\n¸Ş¼¼Áö : {message}");
+        Debug.Log($"ë°© ìƒì„± ì‹¤íŒ¨ :\nì½”ë“œ : {returnCode}\në©”ì„¸ì§€ : {message}");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         base.OnJoinRandomFailed(returnCode, message);
-        Debug.Log($"¹æ Âü°¡ ½ÇÆĞ :\nÄÚµå : {returnCode}\n¸Ş¼¼Áö : {message}");
+        Debug.Log($"ë°© ì°¸ê°€ ì‹¤íŒ¨ :\nì½”ë“œ : {returnCode}\në©”ì„¸ì§€ : {message}");
     }
 
-    // OnCreateRoom ÇÔ¼ö È£Ãâ µÚ ÀÌ°÷À¸·Î µé¾î¿È
+    // OnCreateRoom í•¨ìˆ˜ í˜¸ì¶œ ë’¤ ì´ê³³ìœ¼ë¡œ ë“¤ì–´ì˜´
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        print("¹æ Âü°¡ ¿Ï·á");
+        print("ë°© ì°¸ê°€ ì™„ë£Œ");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        Debug.Log($"{newPlayer.NickName} Âü°¡");
+        print($"{newPlayer.NickName}ê°€ ë°©ì— ì°¸ê°€");
 
+        print("ê²Œì„ ì”¬ìœ¼ë¡œ ì´ë™");
         PhotonNetwork.LoadLevel(SSceneName.INGAME_SCENE);
     }
 
     public void LeaveRoom()
     {
-        print("¹æ ¶°³ª±â ½Ãµµ");
+        print("ë°© ë– ë‚˜ê¸° ì‹œë„");
 
         Debug.Assert(PhotonNetwork.InRoom == true);
         PhotonNetwork.LeaveRoom();
@@ -127,16 +126,16 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         base.OnLeftRoom();
 
-        print("¹æ ¶°³², ÀÚµ¿À¸·Î °ÔÀÓ ¼­¹ö ¿¬°á ÇØÁ¦ ÈÄ ¸¶½ºÅÍ ¼­¹ö Á¢¼Ó ½Ãµµ..");
+        print("ë°© ë– ë‚¨, ìë™ìœ¼ë¡œ ê²Œì„ ì„œë²„ ì—°ê²° í•´ì œ í›„ ë§ˆìŠ¤í„° ì„œë²„ ì ‘ì† ì‹œë„..");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
 
-        print($"{otherPlayer.NickName}°¡ ¶°³²");
+        print($"{otherPlayer.NickName}ê°€ ë– ë‚¨");
 
-        print("´©±º°¡ ¹æÀ» ³ª°¡¸é ³ªµµ ¹æ ³ª°¨, ÀÚµ¿À¸·Î ¸ŞÀÎ ¾ÀÀ¸·Î ÀÌµ¿");
+        print("ëˆ„êµ°ê°€ ë°©ì„ ë‚˜ê°€ë©´ ë‚˜ë„ ë°© ë‚˜ê°, ìë™ìœ¼ë¡œ ë©”ì¸ ì”¬ìœ¼ë¡œ ì´ë™");
         LeaveRoom();
     }
 }

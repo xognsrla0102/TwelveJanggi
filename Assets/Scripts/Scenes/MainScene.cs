@@ -1,4 +1,4 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,12 +39,12 @@ public class MainScene : MonoBehaviour
 
     private void QuitGame()
     {
-        print("°ÔÀÓ Á¾·á");
+        print("ê²Œìž„ ì¢…ë£Œ");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.isPlaying = false;
+        Application.Quit();
 #endif
     }
 }

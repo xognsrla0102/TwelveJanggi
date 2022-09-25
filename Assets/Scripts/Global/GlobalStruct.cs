@@ -1,4 +1,4 @@
-public struct SSceneName
+ï»¿public struct SSceneName
 {
     public const string INIT_SCENE = "InitScene";
     public const string MAIN_SCENE = "MainScene";
@@ -32,7 +32,7 @@ public struct SRoomPropertyKey
     public const string ROOM_STATE = "RoomState";
 }
 
-// ¹æ¿¡ Âü°¡ÇÑ À¯Àú¿¡ ´ëÇÑ ¼Ó¼º Å°µé
+// ë°©ì— ì°¸ê°€í•œ ìœ ì €ì— ëŒ€í•œ ì†ì„± í‚¤ë“¤
 public struct SPlayerPropertyKey
 {
 }

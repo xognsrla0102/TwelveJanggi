@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Photon.Pun;
 
 public class Singleton<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPunCallbacks
@@ -19,8 +19,8 @@ public class Singleton<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPun
                 {
                     Debug.Assert(
                         false,
-                        $"½Ì±ÛÅÏ {typeof(T)} °³Ã¼°¡ ¾ø½À´Ï´Ù.\n" +
-                        $"InitScene¿¡ °³Ã¼°¡ ÀÖ´ÂÁö È®ÀÎÇÏ¼¼¿ä."
+                        $"ì‹±ê¸€í„´ {typeof(T)} ê°œì²´ê°€ ì—†ìŠµë‹ˆë‹¤.\n" +
+                        $"InitSceneì— ê°œì²´ê°€ ìˆëŠ”ì§€ í™•ì¸í•˜ì„¸ìš”."
                         );
                 }
             }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public enum ESoundType
@@ -11,10 +11,10 @@ public enum ESoundType
 public class SoundManager : Singleton<SoundManager>
 {
     [SerializeField] private AudioSource[] sources = new AudioSource[(int)ESoundType.NUMS];
-    // ÀÎ½ºÆåÅÍ¿¡¼­ ³ÖÀ» ¼Ò¸®µé
+    // ì¸ìŠ¤í™í„°ì—ì„œ ë„£ì„ ì†Œë¦¬ë“¤
     [SerializeField] private AudioClip[] sounds;
 
-    // ½ÇÁ¦·Î ¾²ÀÏ ¼Ò¸®µé
+    // ì‹¤ì œë¡œ ì“°ì¼ ì†Œë¦¬ë“¤
     private Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
 
     public AudioSource BgmSource => sources[(int)ESoundType.BGM];
@@ -35,13 +35,13 @@ public class SoundManager : Singleton<SoundManager>
     {
         AudioSource bgmSource = BgmSource;
 
-        // ÇØ´ç BGMÀÌ ÀÌ¹Ì Àç»ı ÁßÀÌ¶ó¸é ¹«½Ã 
+        // í•´ë‹¹ BGMì´ ì´ë¯¸ ì¬ìƒ ì¤‘ì´ë¼ë©´ ë¬´ì‹œ 
         if (bgmSource.clip == clips[name])
         {
             return;
         }
 
-        // ´Ù¸¥ BGMÀÏ °æ¿ì ÁßÁö
+        // ë‹¤ë¥¸ BGMì¼ ê²½ìš° ì¤‘ì§€
         if (bgmSource.isPlaying)
         {
             bgmSource.Stop();

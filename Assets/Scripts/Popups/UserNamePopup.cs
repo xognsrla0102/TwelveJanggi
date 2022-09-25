@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -37,7 +37,7 @@ public class UserNamePopup : MonoBehaviour
         }
 
         PhotonNetwork.NickName = userNameInputField.text;
-        print($"´Ð³×ÀÓ : {PhotonNetwork.NickName}·Î ¼³Á¤");
+        print($"ë‹‰ë„¤ìž„ : {PhotonNetwork.NickName}ë¡œ ì„¤ì •");
 
         gameObject.SetActive(false);
     }

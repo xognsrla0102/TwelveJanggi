@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,7 +20,7 @@ public class InitScene : MonoBehaviour
 
     private IEnumerator WaitForInitCoroutine()
     {
-        // donDestroy¿ÀºêÁ§Æ® ÃÊ±âÈ­ 2 ÇÁ·¹ÀÓµ¿¾È ´ë±â
+        // donDestroyì˜¤ë¸Œì íŠ¸ ì´ˆê¸°í™” 2 í”„ë ˆì„ë™ì•ˆ ëŒ€ê¸°
         for (int i = 0; i < 2; i++)
         {
             yield return new WaitForEndOfFrame();
