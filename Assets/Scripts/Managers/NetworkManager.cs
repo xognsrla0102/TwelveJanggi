@@ -16,6 +16,7 @@ public class NetworkManager : Singleton<NetworkManager>
         PhotonNetwork.SerializationRate = 30;
     }
 
+    #region 마스터 서버
     public void ConnectMasterServer()
     {
         print("마스터 서버 접속 시도");
@@ -35,24 +36,10 @@ public class NetworkManager : Singleton<NetworkManager>
         print($"연결 끊김. 이유 [{cause}]");
 
         SceneManager.LoadScene(SSceneName.MAIN_SCENE);
-
-        //switch (cause)
-        //{
-        //    case DisconnectCause.DisconnectByClientLogic:
-        //        print("타이틀로 이동");
-        //        SceneManager.LoadScene(SSceneName.MAIN_SCENE);
-        //        break;
-        //    default:
-        //        OKPopup popup = Popup.CreateErrorPopup("Server Disconnected", $"{cause}") as OKPopup;
-        //        popup.SetOKBtnAction(() =>
-        //        {
-        //            print("서버 끊김으로 인한 타이틀 씬 이동");
-        //            LoadingManager.LoadScene(SSceneName.TITLE_SCENE);
-        //        });
-        //        break;
-        //}
     }
+    #endregion
 
+    #region 로비
     public override void OnJoinedLobby()
     {
         base.OnJoinedLobby();
@@ -76,7 +63,9 @@ public class NetworkManager : Singleton<NetworkManager>
         print("마스터 서버 연결 해제");
         PhotonNetwork.Disconnect();
     }
+    #endregion
 
+    #region 방
     public void OnJoinRandomRoom()
     {
         print("방 참가 혹은 생성");
@@ -138,4 +127,9 @@ public class NetworkManager : Singleton<NetworkManager>
         print("누군가 방을 나가면 나도 방 나감, 자동으로 메인 씬으로 이동");
         LeaveRoom();
     }
+    #endregion
+
+    #region 인게임
+
+    #endregion
 }

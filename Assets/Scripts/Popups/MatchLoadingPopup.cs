@@ -9,7 +9,7 @@ public class MatchLoadingPopup : MonoBehaviour
     [SerializeField] private RawImage loadingImage;
     [SerializeField] private Button cancelBtn;
 
-    private const float ROTATE_SPD = 50f;
+    private const float ROTATE_SPD = 130f;
 
     private void Start()
     {
