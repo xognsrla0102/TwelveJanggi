@@ -1,4 +1,4 @@
-﻿using Photon.Pun;
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,8 +52,7 @@ public class MatchLoadingPopup : MonoBehaviour
 
     private void OnClickCancelBtn()
     {
+        cancelBtn.interactable = false;
         NetworkManager.Instance.LeaveRoom();
-
-        gameObject.SetActive(false);
     }
 }

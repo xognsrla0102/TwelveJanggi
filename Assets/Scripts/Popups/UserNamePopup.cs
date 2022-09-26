@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
@@ -50,13 +50,15 @@ public class UserNamePopup : MonoBehaviour
             return;
         }
 
+        print($"닉네임 : {UserManager.Instance.userName}로 설정");
         UserManager.Instance.userName = userNameInputField.text;
         PhotonNetwork.NickName = UserManager.Instance.userName;
-        print($"닉네임 : {UserManager.Instance.userName}로 설정");
 
+        print("프로필 이미지 설정");
         UserManager.Instance.profileTexture = profileImage.texture;
         FindObjectOfType<MainScene>().SetProfileInfo();
 
+        print("프로필 초기화 완료");
         UserManager.Instance.isInitialized = true;
         gameObject.SetActive(false);
     }
@@ -74,15 +76,13 @@ public class UserNamePopup : MonoBehaviour
 
     private IEnumerator GetTextureCoroutine()
     {
-        okBtn.interactable = false;
-        applyProfileBtn.interactable = false;
+        GameObject.Find("UI").GetComponent<CanvasGroup>().interactable = false;
 
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(profileTextureInputField.text);
 
         yield return request.SendWebRequest();
 
-        okBtn.interactable = true;
-        applyProfileBtn.interactable = true;
+        GameObject.Find("UI").GetComponent<CanvasGroup>().interactable = true;
         if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.LogWarning($"이미지 로드 실패. 기본 이미지로 대체함\n" +
@@ -91,6 +91,9 @@ public class UserNamePopup : MonoBehaviour
             profileImage.texture = defaultTexture;
             yield break;
         }
+
+        print("프로필 이미지 URL 설정");
+        UserManager.Instance.profileImageUrl = profileTextureInputField.text;
 
         profileImage.texture = (request.downloadHandler as DownloadHandlerTexture).texture;
     }

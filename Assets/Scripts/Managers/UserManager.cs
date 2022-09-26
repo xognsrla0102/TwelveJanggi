@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class UserManager : Singleton<UserManager>
 {
-    [HideInInspector] public string userName;
-    [HideInInspector] public Texture profileTexture;
     public bool isInitialized;
+
+    [HideInInspector] public string userName;
+    [HideInInspector] public string profileImageUrl;
+    [HideInInspector] public Texture profileTexture;
 }

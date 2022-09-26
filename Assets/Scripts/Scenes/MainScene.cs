@@ -1,4 +1,4 @@
-﻿using Photon.Pun;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +49,8 @@ public class MainScene : MonoBehaviour
     private void MatchGame()
     {
         matchLoadingPopup.SetActive(true);
-        NetworkManager.Instance.OnJoinRandomRoom();
+
+        NetworkManager.Instance.OnJoinRandomRoomOrCreateRoom();
     }
 
     private void QuitGame()

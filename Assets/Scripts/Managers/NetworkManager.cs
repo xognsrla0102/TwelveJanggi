@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
@@ -27,46 +27,23 @@ public class NetworkManager : Singleton<NetworkManager>
     {
         base.OnConnectedToMaster();
         print("마스터 서버에 연결 완료");
-        PhotonNetwork.JoinLobby();
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        base.OnDisconnected(cause);
-        print($"연결 끊김. 이유 [{cause}]");
-
-        SceneManager.LoadScene(SSceneName.MAIN_SCENE);
-    }
-    #endregion
-
-    #region 로비
-    public override void OnJoinedLobby()
-    {
-        base.OnJoinedLobby();
-        print("로비 서버 접속 완료");
 
         print("메인 씬으로 이동");
         SceneManager.LoadScene(SSceneName.MAIN_SCENE);
     }
 
-    public void LeaveLobby()
+    public override void OnDisconnected(DisconnectCause cause)
     {
-        print("로비 떠나기 시도");
-        PhotonNetwork.LeaveLobby();
-    }
+        base.OnDisconnected(cause);
+        print("연결 끊김. 방으로 이동.\n" +
+            $"이유 [{cause}]");
 
-    public override void OnLeftLobby()
-    {
-        base.OnLeftLobby();
-        print("로비 떠남");
-
-        print("마스터 서버 연결 해제");
-        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene(SSceneName.MAIN_SCENE);
     }
     #endregion
 
     #region 방
-    public void OnJoinRandomRoom()
+    public void OnJoinRandomRoomOrCreateRoom()
     {
         print("방 참가 혹은 생성");
 
@@ -78,13 +55,23 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         base.OnCreateRoomFailed(returnCode, message);
-        Debug.Log($"방 생성 실패 :\n코드 : {returnCode}\n메세지 : {message}");
+        Debug.Log("방 생성 실패 :\n" +
+            $"코드 : {returnCode}\n" +
+            $"메세지 : {message}");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         base.OnJoinRandomFailed(returnCode, message);
-        Debug.Log($"방 참가 실패 :\n코드 : {returnCode}\n메세지 : {message}");
+        Debug.Log("방 참가 실패 :\n" +
+            $"코드 : {returnCode}\n" +
+            $"메세지 : {message}");
+    }
+
+    public override void OnCreatedRoom()
+    {
+        base.OnCreatedRoom();
+        print("방 생성 완료");
     }
 
     // OnCreateRoom 함수 호출 뒤 이곳으로 들어옴
@@ -114,7 +101,6 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-
         print("방 떠남, 자동으로 게임 서버 연결 해제 후 마스터 서버 접속 시도..");
     }
 
@@ -130,6 +116,39 @@ public class NetworkManager : Singleton<NetworkManager>
     #endregion
 
     #region 인게임
+    public void SendMyProfileInfo()
+    {
+        photonView.RPC(nameof(SendMyProfileInfoRPC), RpcTarget.Others,
+            UserManager.Instance.userName,
+            UserManager.Instance.profileImageUrl);
+    }
 
+    [PunRPC] private void SendMyProfileInfoRPC(string userName, string profileImageUrl)
+    {
+        print("상대 프로필 정보 받음.");
+        print($"유저 이름 : {userName}\n" +
+            $"프로필 이미지 URL : {profileImageUrl}");
+
+        FindObjectOfType<IngameScene>().SetEnemyProfile(userName, profileImageUrl);
+    }
+
+    public void SelectFirstTurnUser()
+    {
+        // 방장이 랜덤으로 0, 1 중에 하나 정해서 RPC로 전달
+        bool isMasterFirstTurn = Random.Range(0, 2) == 0;
+
+        photonView.RPC(nameof(SelectNowTurnUserRPC), RpcTarget.All, isMasterFirstTurn);
+    }
+
+    public void SelectNextTurnUser(bool isNextTurnMaster)
+    {
+        photonView.RPC(nameof(SelectNowTurnUserRPC), RpcTarget.All, isNextTurnMaster);
+    }
+
+    [PunRPC]
+    private void SelectNowTurnUserRPC(bool isMasterTurn)
+    {
+        FindObjectOfType<IngameScene>().SetTurn(isMasterTurn);
+    }
     #endregion
 }
