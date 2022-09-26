@@ -1,4 +1,4 @@
-﻿public struct SSceneName
+public struct SSceneName
 {
     public const string INIT_SCENE = "InitScene";
     public const string MAIN_SCENE = "MainScene";
@@ -24,21 +24,5 @@ public struct SSfxName
 {
     public const string BUTTON_OVER_SFX = "BtnOver";
     public const string BUTTON_CLICK_SFX = "BtnClick";
-}
-
-public struct SRoomPropertyKey
-{
-    public const string MASTER_CLIENT = "MasterClient";
-    public const string ROOM_STATE = "RoomState";
-}
-
-// 방에 참가한 유저에 대한 속성 키들
-public struct SPlayerPropertyKey
-{
-}
-
-public struct SResourceLoadPath
-{
-    public const string IMAGE = "Images/";
-    public const string PREFAB = "Prefabs/";
+    public const string JANGGI_DROP_SFX = "JanggiDrop";
 }
