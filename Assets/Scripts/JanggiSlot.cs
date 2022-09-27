@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 
 public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
-    [SerializeField] private int heightNum;
-    [SerializeField] private int widthNum;
-    [SerializeField] private GameObject shadowJanggi;
+    public Janggi shadowJanggi;
+
+    [HideInInspector] public int heightNum;
+    [HideInInspector] public int widthNum;
 
     private Color myFieldColor = new Color(140f / 255f, 255f / 255f, 140f / 255f);
     private Color darkMyFieldColor = new Color(100f / 255f, 200f / 255f, 100f / 255f);
@@ -79,15 +81,37 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (eventData.pointerDrag != null)
         {
-            eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.transform.SetAsLastSibling();
-            eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
-
-            SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
-
             Transform originParent = eventData.pointerDrag.GetComponent<Janggi>().originParent;
 
-            // 원래 슬롯으로 제자리 둘 경우 무시
+            // 현재 슬롯에 쉐도우 장기가 활성화 안되어있으면 드랍 못함
+            if (shadowJanggi.gameObject.activeInHierarchy == false)
+            {
+                DropJanggi(eventData.pointerDrag, originParent);
+                return;
+            }
+
+            // 이미 현재 슬롯에 장기가 있을 경우
+            Transform mySlotJanggiTransform = transform.Find("Janggi");
+            if (mySlotJanggiTransform != null)
+            {
+                // 내 슬롯이면 드랍 못 함
+                if (mySlotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                {
+                    DropJanggi(eventData.pointerDrag, originParent);
+                    return;
+                }
+                // 상대방 장기일 경우 먹기 처리
+                else
+                {
+                    // 임시로 해당 장기 오브젝트 삭제
+                    Destroy(mySlotJanggiTransform.gameObject);
+                }
+            }
+
+            DropJanggi(eventData.pointerDrag, transform);
+            SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
+
+            // 원래 슬롯으로 제자리 두는 경우는 무시 (이 코드 위치 위에 있을 수 없나?)
             if (transform == originParent)
             {
                 return;
@@ -103,8 +127,10 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    public void SetActiveShadowJanggi(bool isActive)
+    private void DropJanggi(GameObject janggi, Transform parent)
     {
-        shadowJanggi.SetActive(isActive);
+        janggi.transform.SetParent(parent);
+        janggi.transform.SetAsFirstSibling();
+        janggi.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
     }
 }

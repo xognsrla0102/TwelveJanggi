@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,30 +32,24 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     [SerializeField] private EJanggiType janggiType;
     [SerializeField] private Text janggiText;
+    [SerializeField] private bool isShadowJanggi;
+    [SerializeField] private GameObject[] dirs;
 
     [HideInInspector] public CanvasGroup canvasGroup;
     [HideInInspector] public Transform originParent;
 
-
-    private bool isShadowJanggi;
-
-    private GameObject[] dirs = new GameObject[(int)EDirType.NUMS];
     private Transform gameUiCanvas;
     private RectTransform rectTransform;
     private Outline outLine;
+    private IngameScene ingameScene;
 
     private void Start()
     {
-        Transform dir = transform.Find("Dir");
-        for (int i = 0; i < 8; i++)
-        {
-            dirs[i] = dir.GetChild(i).gameObject;
-        }
-
         canvasGroup = GetComponent<CanvasGroup>();
         gameUiCanvas = GameObject.Find("GameUI").transform;
         rectTransform = GetComponent<RectTransform>();
         outLine = GetComponent<Outline>();
+        ingameScene = FindObjectOfType<IngameScene>();
 
         if (isMyJanggi)
         {
@@ -67,17 +62,22 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 180f));
         }
 
-        SetJanggi();
+        if (isShadowJanggi == false)
+        {
+            SetJanggi(janggiType);
+        }
     }
 
-    public void SetJanggi()
+    public void SetJanggi(EJanggiType janggiType)
     {
+        this.janggiType = janggiType;
+
         foreach (var dir in dirs)
         {
             dir.SetActive(false);
         }
 
-        switch (janggiType)
+        switch (this.janggiType)
         {
             // 전,후,좌,우
             case EJanggiType.JANG:
@@ -135,6 +135,9 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
         // 드랍 시 슬롯에 레이캐스트 충돌 되는 것 방지
         canvasGroup.blocksRaycasts = false;
+
+        JanggiSlot janggiSlot = originParent.GetComponent<JanggiSlot>();
+        ingameScene.ShowShadowJanggi(janggiSlot.heightNum, janggiSlot.widthNum, janggiType);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -152,7 +155,10 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             rectTransform.anchoredPosition = Vector3.zero;
         }
 
-        // 장기를 잡을 수 있어야 하므로 다시 레이캐스트 충돌 처리
-        canvasGroup.blocksRaycasts = true;
+        // 드래그 끝난 장기는 내 턴이 끝나지 않은 경우, 다시 장기 잡을 수 있게 처리
+        bool isMyTurn = ingameScene.isMasterTurn == PhotonNetwork.IsMasterClient;
+        canvasGroup.blocksRaycasts = isMyTurn;
+
+        ingameScene.HideShadowJanggi();
     }
 }

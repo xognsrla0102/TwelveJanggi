@@ -54,7 +54,13 @@ public class IngameScene : MonoBehaviour
         Transform slotGridTransform = GameObject.Find("SlotGrid").transform;
         for (int i = 0; i < 12; i++)
         {
-            janggiSlots[i / 3, i % 3] = slotGridTransform.GetChild(i).GetComponent<JanggiSlot>();
+            int heightNum = i / 3;
+            int widthNum = i % 3;
+
+            janggiSlots[heightNum, widthNum] = slotGridTransform.GetChild(i).GetComponent<JanggiSlot>();
+
+            janggiSlots[heightNum, widthNum].heightNum = heightNum;
+            janggiSlots[heightNum, widthNum].widthNum = widthNum;
         }
 
         // 방장이라면 7,9,10,11번 슬롯.
@@ -138,7 +144,7 @@ public class IngameScene : MonoBehaviour
 
         // 현재 턴 유저의 아웃라인 오브젝트 활성화
         myTurnOutLine.SetActive(isMyTurn);
-        enemyTurnOutLine.SetActive(isMyTurn == false);
+        enemyTurnOutLine.SetActive(isMyTurn == false);        
 
         // 내 장기 옮길 수 있는지 세팅
         for (int height = 0; height < 4; height++)
@@ -233,7 +239,187 @@ public class IngameScene : MonoBehaviour
 
         RectTransform janggiRectTransform = janggiSlots[srcHeightNum, srcWidthNum].transform.Find("Janggi").GetComponent<RectTransform>();
         janggiRectTransform.SetParent(janggiSlots[destHeightNum, destWidthNum].transform);
-        janggiRectTransform.SetAsLastSibling();
+        janggiRectTransform.SetAsFirstSibling();
         janggiRectTransform.anchoredPosition = Vector3.zero;
+    }
+
+    public void ShowShadowJanggi(int slotHeightNum, int slotWidthNum, EJanggiType janggiType)
+    {
+        int deltaY, deltaX;
+        int nowY, nowX;
+        Transform slotJanggiTransform;
+
+        switch (janggiType)
+        {
+            case EJanggiType.JANG:
+                for (int height = -1; height <= 1; height++)
+                {
+                    for (int width = -1; width <= 1; width++)
+                    {
+                        if (height == -1)
+                        {
+                            if (width == -1 || width == 1)
+                            {
+                                continue;
+                            }
+                        }
+                        else if (height == 0)
+                        {
+                            if (width == 0)
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (width == -1 || width == 1)
+                            {
+                                continue;
+                            }
+                        }
+
+                        nowY = slotHeightNum + height;
+                        nowX = slotWidthNum + width;
+
+                        if (nowY < 0 || nowY > 3 || nowX < 0 || nowX > 2)
+                        {
+                            continue;
+                        }
+
+                        // 해당 슬롯에 내 장기가 있을 경우 쉐도우 장기 활성화 안 함
+                        slotJanggiTransform = janggiSlots[nowY, nowX].transform.Find("Janggi");
+                        if (slotJanggiTransform != null)
+                        {
+                            if (slotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                            {
+                                continue;
+                            }
+                        }
+
+                        janggiSlots[nowY, nowX].shadowJanggi.gameObject.SetActive(true);
+                        janggiSlots[nowY, nowX].shadowJanggi.SetJanggi(janggiType);
+                    }
+                }
+                break;
+            case EJanggiType.SANG:
+                for (int height = -1; height <= 1; height++)
+                {
+                    for (int width = -1; width <= 1; width++)
+                    {
+                        if (height == -1)
+                        {
+                            if (width == 0)
+                            {
+                                continue;
+                            }
+                        }
+                        else if (height == 0)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if (width == 0)
+                            {
+                                continue;
+                            }
+                        }
+
+                        nowY = slotHeightNum + height;
+                        nowX = slotWidthNum + width;
+
+                        if (nowY < 0 || nowY > 3 || nowX < 0 || nowX > 2)
+                        {
+                            continue;
+                        }
+
+                        // 해당 슬롯에 내 장기가 있을 경우 쉐도우 장기 활성화 안 함
+                        slotJanggiTransform = janggiSlots[nowY, nowX].transform.Find("Janggi");
+                        if (slotJanggiTransform != null)
+                        {
+                            if (slotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                            {
+                                continue;
+                            }
+                        }
+
+                        janggiSlots[nowY, nowX].shadowJanggi.gameObject.SetActive(true);
+                        janggiSlots[nowY, nowX].shadowJanggi.SetJanggi(janggiType);
+                    }
+                }
+                break;
+            case EJanggiType.WANG:
+                for (int height = -1; height <= 1; height++)
+                {
+                    for (int width = -1; width <= 1; width++)
+                    {
+                        if (height == 0 && width == 0)
+                        {
+                            continue;
+                        }
+
+                        nowY = slotHeightNum + height;
+                        nowX = slotWidthNum + width;
+
+                        if (nowY < 0 || nowY > 3 || nowX < 0 || nowX > 2)
+                        {
+                            continue;
+                        }
+
+                        // 해당 슬롯에 내 장기가 있을 경우 쉐도우 장기 활성화 안 함
+                        slotJanggiTransform = janggiSlots[nowY, nowX].transform.Find("Janggi");
+                        if (slotJanggiTransform != null)
+                        {
+                            if (slotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                            {
+                                continue;
+                            }
+                        }
+
+                        janggiSlots[nowY, nowX].shadowJanggi.gameObject.SetActive(true);
+                        janggiSlots[nowY, nowX].shadowJanggi.SetJanggi(janggiType);
+                    }
+                }
+                break;
+            case EJanggiType.JA:
+                deltaY = PhotonNetwork.IsMasterClient ? -1 : 1;
+                nowY = slotHeightNum + deltaY;
+
+                if (nowY < 0 || nowY > 3)
+                {
+                    break;
+                }
+
+                // 해당 슬롯에 내 장기가 있을 경우 쉐도우 장기 활성화 안 함
+                slotJanggiTransform = janggiSlots[nowY, slotWidthNum].transform.Find("Janggi");
+                if (slotJanggiTransform != null)
+                {
+                    if (slotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                    {
+                        break;
+                    }
+                }
+
+                janggiSlots[nowY, slotWidthNum].shadowJanggi.gameObject.SetActive(true);
+                janggiSlots[nowY, slotWidthNum].shadowJanggi.SetJanggi(janggiType);
+                break;
+            case EJanggiType.HU:
+                // 후 해야함
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+
+    public void HideShadowJanggi()
+    {
+        for (int height = 0; height < 4; height++)
+        {
+            for (int width = 0; width < 3; width++)
+            {
+                janggiSlots[height, width].shadowJanggi.gameObject.SetActive(false);
+            }
+        }
     }
 }
