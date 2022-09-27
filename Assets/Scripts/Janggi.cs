@@ -12,6 +12,19 @@ public enum EJanggiType
     NUMS
 }
 
+public enum EDirType
+{
+    LEFT_TOP,
+    CENTER_TOP,
+    RIGHT_TOP,
+    LEFT_MID,
+    RIGHT_MID,
+    LEFT_BOTTOM,
+    CENTER_BOTTOM,
+    RIGHT_BOTTOM,
+    NUMS
+}
+
 public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool isMyJanggi;
@@ -19,32 +32,34 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     [SerializeField] private EJanggiType janggiType;
     [SerializeField] private Text janggiText;
 
+    [HideInInspector] public CanvasGroup canvasGroup;
+    [HideInInspector] public Transform originParent;
+
+
     private bool isShadowJanggi;
 
-    [HideInInspector] public CanvasGroup canvasGroup;
+    private GameObject[] dirs = new GameObject[(int)EDirType.NUMS];
     private Transform gameUiCanvas;
     private RectTransform rectTransform;
     private Outline outLine;
 
-    private Transform originParent;
-
-    private void Awake()
+    private void Start()
     {
+        Transform dir = transform.Find("Dir");
+        for (int i = 0; i < 8; i++)
+        {
+            dirs[i] = dir.GetChild(i).gameObject;
+        }
+
         canvasGroup = GetComponent<CanvasGroup>();
         gameUiCanvas = GameObject.Find("GameUI").transform;
         rectTransform = GetComponent<RectTransform>();
         outLine = GetComponent<Outline>();
 
-        // 내 장기일 경우만 옮기게 함
-        canvasGroup.blocksRaycasts = isMyJanggi;
-    }
-
-    private void Start()
-    {
         if (isMyJanggi)
         {
             outLine.effectColor = new Color(0f, 140f / 255f, 0f);
-            transform.rotation = Quaternion.identity;            
+            transform.rotation = Quaternion.identity;
         }
         else
         {
@@ -52,19 +67,60 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 180f));
         }
 
-        SetText();
+        SetJanggi();
     }
 
-    public void SetText()
+    public void SetJanggi()
     {
+        foreach (var dir in dirs)
+        {
+            dir.SetActive(false);
+        }
+
         switch (janggiType)
         {
-            case EJanggiType.JANG: janggiText.text = "將"; break;
-            case EJanggiType.SANG: janggiText.text = "相"; break;
-            case EJanggiType.WANG: janggiText.text = "王"; break;
-            case EJanggiType.JA: janggiText.text = "子"; break;
-            case EJanggiType.HU: janggiText.text = "候"; break;
-            default: Debug.Assert(false); break;
+            // 전,후,좌,우
+            case EJanggiType.JANG:
+                janggiText.text = "將";
+                dirs[(int)EDirType.CENTER_TOP].SetActive(true);
+                dirs[(int)EDirType.CENTER_BOTTOM].SetActive(true);
+                dirs[(int)EDirType.LEFT_MID].SetActive(true);
+                dirs[(int)EDirType.RIGHT_MID].SetActive(true);
+                break;
+            // 대각선 4방향
+            case EJanggiType.SANG:
+                janggiText.text = "相";
+                dirs[(int)EDirType.LEFT_TOP].SetActive(true);
+                dirs[(int)EDirType.RIGHT_TOP].SetActive(true);
+                dirs[(int)EDirType.LEFT_BOTTOM].SetActive(true);
+                dirs[(int)EDirType.RIGHT_BOTTOM].SetActive(true);
+                break;
+            // 모든 방향
+            case EJanggiType.WANG:
+                janggiText.text = "王";
+                foreach (var dir in dirs)
+                {
+                    dir.SetActive(true);
+                }
+                break;
+            // 전
+            case EJanggiType.JA:
+                janggiText.text = "子";
+                dirs[(int)EDirType.CENTER_TOP].SetActive(true);
+                break;
+            // 뒤쪽 대각선 제외 모든 방향
+            case EJanggiType.HU:
+                janggiText.text = "候";
+                foreach (var dir in dirs)
+                {
+                    dir.SetActive(true);
+                }
+                dirs[(int)EDirType.LEFT_BOTTOM].SetActive(false);
+                dirs[(int)EDirType.RIGHT_BOTTOM].SetActive(false);
+                break;
+            default:
+                Debug.Assert(false);
+                break;
         }
     }
 

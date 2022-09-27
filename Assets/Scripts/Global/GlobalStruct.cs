@@ -25,4 +25,7 @@ public struct SSfxName
     public const string BUTTON_OVER_SFX = "BtnOver";
     public const string BUTTON_CLICK_SFX = "BtnClick";
     public const string JANGGI_DROP_SFX = "JanggiDrop";
+    public const string GAME_START_SFX = "GameStart";
+    public const string COUNT_DOWN_SFX = "CountDown";
+    public const string TIMER_SFX = "Timer";
 }

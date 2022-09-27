@@ -22,16 +22,23 @@ public class IngameScene : MonoBehaviour
 
     [SerializeField] private Button surrenderBtn;
 
-    private JanggiSlot[,] janggiSlots = new JanggiSlot[4, 3];
+    [SerializeField] private GameObject dimObj;
+    [SerializeField] private TextMeshProUGUI countDownText;
+
+    [HideInInspector] public bool isMasterTurn;
 
     private const float TURN_TIME = 30f;
+    private const int COUNT_DOWN_TIME = 5;
+
+    private JanggiSlot[,] janggiSlots = new JanggiSlot[4, 3];
 
     private float turnStartTime;
 
-    private bool isMasterTurn;
     private bool stopTimer;
 
-    private void Start()
+    private bool isBeepSound;
+
+    private void Awake()
     {
         surrenderBtn.onClick.AddListener(OnClickSurrenderBtn);
 
@@ -50,6 +57,21 @@ public class IngameScene : MonoBehaviour
             janggiSlots[i / 3, i % 3] = slotGridTransform.GetChild(i).GetComponent<JanggiSlot>();
         }
 
+        // 방장이라면 7,9,10,11번 슬롯.
+        // 아니라면 0,1,2,4번 슬롯의 장기임
+        int[] myJanggiNums = PhotonNetwork.IsMasterClient ? new int[] {7,9,10,11} : new int[] {0,1,2,4};
+        for (int i = 0; i < myJanggiNums.Length; i++)
+        {
+            slotGridTransform.GetChild(myJanggiNums[i])
+                .Find("Janggi").GetComponent<Janggi>().isMyJanggi = true;
+        }
+
+        // 방장과 반대 방향으로 보드판을 돌림
+        if (PhotonNetwork.IsMasterClient == false)
+        {
+            slotGridTransform.Rotate(new Vector3(0f, 0f, 180f));
+        }
+
         StartGame();
     }
 
@@ -59,6 +81,36 @@ public class IngameScene : MonoBehaviour
         enemyTurnOutLine.SetActive(false);
 
         timerText.text = "00.00";
+        stopTimer = true;
+
+        StartCoroutine(StartGameCoroutine());
+    }
+
+    private IEnumerator StartGameCoroutine()
+    {
+        dimObj.SetActive(true);
+        countDownText.gameObject.SetActive(true);
+
+        int count = COUNT_DOWN_TIME;
+        while (true)
+        {
+            SoundManager.Instance.PlaySND(SSfxName.COUNT_DOWN_SFX);
+            countDownText.text = $"{count}";
+            yield return new WaitForSeconds(1f);
+
+            count--;
+            if (count == 0)
+            {
+                SoundManager.Instance.PlaySND(SSfxName.GAME_START_SFX);
+                countDownText.text = "START!!";
+                yield return new WaitForSeconds(1f);
+
+                break;
+            }
+        }
+
+        dimObj.SetActive(false);
+        countDownText.gameObject.SetActive(false);
 
         // 방장이 랜덤으로 선 정함
         if (PhotonNetwork.IsMasterClient)
@@ -101,6 +153,10 @@ public class IngameScene : MonoBehaviour
                     {
                         janggi.canvasGroup.blocksRaycasts = isMyTurn;
                     }
+                    else
+                    {
+                        janggi.canvasGroup.blocksRaycasts = false;
+                    }
                 }
             }
         }
@@ -108,6 +164,8 @@ public class IngameScene : MonoBehaviour
         // 타이머 작동 시작
         turnStartTime = Time.time;
         stopTimer = false;
+
+        isBeepSound = false;
     }
 
     private void Update()
@@ -116,6 +174,12 @@ public class IngameScene : MonoBehaviour
         {
             float remainSec = TURN_TIME - (Time.time - turnStartTime);
             timerText.text = $"{remainSec:00.00}";
+
+            if (isBeepSound == false && remainSec <= 10f)
+            {
+                SoundManager.Instance.PlaySND(SSfxName.TIMER_SFX);
+                isBeepSound = true;
+            }
 
             // 현재 타이머가 종료되었을 경우
             if (remainSec <= 0)
@@ -131,14 +195,6 @@ public class IngameScene : MonoBehaviour
                 }
             }
         }
-
-        bool isMyTurn = isMasterTurn == PhotonNetwork.IsMasterClient;
-        if (isMyTurn == false)
-        {
-            return;
-        }
-
-        // 장기 조작 처리
     }
 
     public void SetEnemyProfile(string userName, string profileImageUrl)
@@ -167,5 +223,17 @@ public class IngameScene : MonoBehaviour
         }
 
         enemyProfileImage.texture = (request.downloadHandler as DownloadHandlerTexture).texture;
+    }
+
+    public void OnDropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    {
+        print($"{srcHeightNum},{srcWidthNum}의 장기를 {destHeightNum},{destWidthNum} 위치로 둡니다.");
+
+        SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
+
+        RectTransform janggiRectTransform = janggiSlots[srcHeightNum, srcWidthNum].transform.Find("Janggi").GetComponent<RectTransform>();
+        janggiRectTransform.SetParent(janggiSlots[destHeightNum, destWidthNum].transform);
+        janggiRectTransform.SetAsLastSibling();
+        janggiRectTransform.anchoredPosition = Vector3.zero;
     }
 }

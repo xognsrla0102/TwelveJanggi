@@ -342,9 +342,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 2098183901}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &82035013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,9 +466,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 980438453}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &96441698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +704,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
+      propertyPath: isMyJanggi
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: janggiType
       value: 1
       objectReference: {fileID: 0}
@@ -776,9 +784,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 785550033}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &231666667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -910,7 +920,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &242512051
 RectTransform:
@@ -924,9 +934,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 492993062}
   - {fileID: 1285099796}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1045,7 +1056,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -260, y: -30}
-  m_SizeDelta: {x: 550, y: 75}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &299002287
 MonoBehaviour:
@@ -1286,9 +1297,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1968491427}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &359062309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1412,7 +1425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.50980395, b: 0.50980395, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1477,12 +1490,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492993061}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1822798278}
+  m_Father: {fileID: 242512051}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2017,9 +2030,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1052306327}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &639037082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2308,7 +2323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.50980395, b: 0.50980395, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2495,7 +2510,7 @@ RectTransform:
   - {fileID: 299002286}
   - {fileID: 1872531618}
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2805,9 +2820,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 42629705}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &890614884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2959,6 +2976,10 @@ PrefabInstance:
     - target: {fileID: 6133331997038374067, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
+      propertyPath: isMyJanggi
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: janggiType
@@ -3353,9 +3374,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1448288076}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &987344154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3669,6 +3692,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
+      propertyPath: isMyJanggi
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: janggiType
       value: 3
       objectReference: {fileID: 0}
@@ -3824,7 +3851,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3994,9 +4021,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1057088470}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &1160412700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4157,7 +4186,7 @@ RectTransform:
   m_Children:
   - {fileID: 16766156}
   m_Father: {fileID: 242512051}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4203,7 +4232,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
@@ -4421,7 +4450,7 @@ RectTransform:
   - {fileID: 1826175584}
   - {fileID: 755144630}
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4494,9 +4523,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 111582772}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &1381732487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4549,6 +4580,82 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381732483}
+  m_CullTransparentMesh: 1
+--- !u!1 &1383447386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1383447387}
+  - component: {fileID: 1383447389}
+  - component: {fileID: 1383447388}
+  m_Layer: 5
+  m_Name: dimObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1383447387
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383447386}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1822798278}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1383447388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383447386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1383447389
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383447386}
   m_CullTransparentMesh: 1
 --- !u!1 &1389662653
 GameObject:
@@ -4690,7 +4797,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -5356,7 +5463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.50980395, b: 0.50980395, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5434,6 +5541,9 @@ MonoBehaviour:
   timerText: {fileID: 1106167582}
   scoreText: {fileID: 1319734707}
   surrenderBtn: {fileID: 1661577511}
+  dimObj: {fileID: 1383447386}
+  countDownText: {fileID: 2074372822}
+  isMasterTurn: 0
 --- !u!4 &1635581957
 Transform:
   m_ObjectHideFlags: 0
@@ -5483,7 +5593,7 @@ RectTransform:
   m_Children:
   - {fileID: 563898239}
   m_Father: {fileID: 1822798278}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -5872,7 +5982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.54901963, g: 1, b: 0.54901963, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6184,7 +6294,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1822798278
 RectTransform:
@@ -6198,15 +6308,16 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 492993062}
   - {fileID: 1381233292}
   - {fileID: 731391910}
   - {fileID: 1416230924}
   - {fileID: 1106167581}
   - {fileID: 1319734706}
   - {fileID: 1661577510}
+  - {fileID: 1383447387}
+  - {fileID: 2074372821}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6249,7 +6360,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 260, y: 130}
-  m_SizeDelta: {x: 550, y: 75}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1826175585
 MonoBehaviour:
@@ -6414,9 +6525,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1330878535}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &1865542778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6891,7 +7004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.54901963, g: 1, b: 0.54901963, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7006,7 +7119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.54901963, g: 1, b: 0.54901963, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7118,6 +7231,141 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2028483417}
+  m_CullTransparentMesh: 1
+--- !u!1 &2074372820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2074372821}
+  - component: {fileID: 2074372823}
+  - component: {fileID: 2074372822}
+  m_Layer: 5
+  m_Name: CountDownText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &2074372821
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074372820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1822798278}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1000, y: 300}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2074372822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074372820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 5
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 250
+  m_fontSizeBase: 250
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &2074372823
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074372820}
   m_CullTransparentMesh: 1
 --- !u!1 &2098183899
 GameObject:
@@ -7265,9 +7513,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 1820028509}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &2106089248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7419,6 +7669,10 @@ PrefabInstance:
     - target: {fileID: 6133331997038374067, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
+      propertyPath: isMyJanggi
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6133331997038374070, guid: 93ea8d963a275444baede1eb34ed6562, type: 3}
       propertyPath: janggiType
@@ -7610,9 +7864,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ed69425adc7a141bcebaa19c64bd79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMyJanggi: 1
   janggiType: 2
   janggiText: {fileID: 7921720309821191766}
-  isMyJanggi: 1
+  canvasGroup: {fileID: 0}
+  originParent: {fileID: 0}
 --- !u!114 &7921720311067646959
 MonoBehaviour:
   m_ObjectHideFlags: 0

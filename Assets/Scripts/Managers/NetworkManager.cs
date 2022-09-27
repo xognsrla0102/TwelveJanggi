@@ -145,10 +145,21 @@ public class NetworkManager : Singleton<NetworkManager>
         photonView.RPC(nameof(SelectNowTurnUserRPC), RpcTarget.All, isNextTurnMaster);
     }
 
-    [PunRPC]
-    private void SelectNowTurnUserRPC(bool isMasterTurn)
+    [PunRPC] private void SelectNowTurnUserRPC(bool isMasterTurn)
     {
         FindObjectOfType<IngameScene>().SetTurn(isMasterTurn);
     }
+
+    public void DropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    {
+        photonView.RPC(nameof(DropJanggiRPC), RpcTarget.Others,
+            srcHeightNum, srcWidthNum, destHeightNum, destWidthNum);
+    }
+
+    [PunRPC] private void DropJanggiRPC(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    {
+        FindObjectOfType<IngameScene>().OnDropJanggi(srcHeightNum, srcWidthNum, destHeightNum, destWidthNum);
+    }
+
     #endregion
 }
