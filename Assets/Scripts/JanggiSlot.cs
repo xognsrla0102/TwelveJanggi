@@ -83,6 +83,13 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             Transform originParent = eventData.pointerDrag.GetComponent<Janggi>().originParent;
 
+            // 원래 슬롯으로 제자리 두는 경우는 위치만 롤백 처리
+            if (transform == originParent)
+            {
+                DropJanggi(eventData.pointerDrag, transform);
+                return;
+            }
+
             // 현재 슬롯에 쉐도우 장기가 활성화 안되어있으면 드랍 못함
             if (shadowJanggi.gameObject.activeInHierarchy == false)
             {
@@ -90,12 +97,17 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 return;
             }
 
+            bool isKill = false;
+            bool isGameOver = false;
+
             // 이미 현재 슬롯에 장기가 있을 경우
             Transform mySlotJanggiTransform = transform.Find("Janggi");
             if (mySlotJanggiTransform != null)
             {
-                // 내 슬롯이면 드랍 못 함
-                if (mySlotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                Janggi janggi = mySlotJanggiTransform.GetComponent<Janggi>();
+
+                // 내 장기이면 드랍 못 함
+                if (janggi.isMyJanggi)
                 {
                     DropJanggi(eventData.pointerDrag, originParent);
                     return;
@@ -105,25 +117,33 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 {
                     // 임시로 해당 장기 오브젝트 삭제
                     Destroy(mySlotJanggiTransform.gameObject);
+                    isKill = true;
+
+                    // 왕을 죽일 경우 게임 오버 처리
+                    if (janggi.janggiType == EJanggiType.WANG)
+                    {
+                        isGameOver = true;
+                    }
                 }
             }
 
             DropJanggi(eventData.pointerDrag, transform);
-            SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
-
-            // 원래 슬롯으로 제자리 두는 경우는 무시 (이 코드 위치 위에 있을 수 없나?)
-            if (transform == originParent)
-            {
-                return;
-            }
+            SoundManager.Instance.PlaySND(isKill ? SSfxName.KILL_JANGGI_SFX : SSfxName.JANGGI_DROP_SFX);
 
             // 현재 옮길 장기의 시작 슬롯과, 목표 슬롯 위치를 전달한다.
             JanggiSlot srcJanggiSlot = originParent.GetComponent<JanggiSlot>();
-            NetworkManager.Instance.DropJanggi(srcJanggiSlot.heightNum, srcJanggiSlot.widthNum, heightNum, widthNum);
-
-            // 턴 종료 처리
-            int nextUserIdx = ((FindObjectOfType<IngameScene>().isMasterTurn ? 1 : 0) + 1) % 2;
-            NetworkManager.Instance.SelectNextTurnUser(nextUserIdx == 1);
+            NetworkManager.Instance.DropJanggi(srcJanggiSlot.heightNum, srcJanggiSlot.widthNum, heightNum, widthNum, isKill);
+            
+            if (isGameOver)
+            {
+                NetworkManager.Instance.StopGame(PhotonNetwork.IsMasterClient);
+            }
+            else
+            {
+                // 턴 종료 처리
+                int nextUserIdx = ((FindObjectOfType<IngameScene>().isMasterTurn ? 1 : 0) + 1) % 2;
+                NetworkManager.Instance.SelectNextTurnUser(nextUserIdx == 1);
+            }
         }
     }
 

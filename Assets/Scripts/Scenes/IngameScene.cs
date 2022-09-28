@@ -38,6 +38,9 @@ public class IngameScene : MonoBehaviour
 
     private bool isBeepSound;
 
+    private int myScore;
+    private int enemyScore;
+
     private void Awake()
     {
         surrenderBtn.onClick.AddListener(OnClickSurrenderBtn);
@@ -63,15 +66,6 @@ public class IngameScene : MonoBehaviour
             janggiSlots[heightNum, widthNum].widthNum = widthNum;
         }
 
-        // 방장이라면 7,9,10,11번 슬롯.
-        // 아니라면 0,1,2,4번 슬롯의 장기임
-        int[] myJanggiNums = PhotonNetwork.IsMasterClient ? new int[] {7,9,10,11} : new int[] {0,1,2,4};
-        for (int i = 0; i < myJanggiNums.Length; i++)
-        {
-            slotGridTransform.GetChild(myJanggiNums[i])
-                .Find("Janggi").GetComponent<Janggi>().isMyJanggi = true;
-        }
-
         // 방장과 반대 방향으로 보드판을 돌림
         if (PhotonNetwork.IsMasterClient == false)
         {
@@ -88,6 +82,68 @@ public class IngameScene : MonoBehaviour
 
         timerText.text = "00.00";
         stopTimer = true;
+
+        // 장기 생성
+        Transform slotGridTransform = GameObject.Find("SlotGrid").transform;
+        Janggi janggiPrefab = Resources.Load<Janggi>("Janggi");
+
+        // 방장이라면 7,9,10,11번 슬롯 장기가 내것
+        // 아니라면 0,1,2,4번 슬롯 장기가 내것
+        int[] myJanggiNums = PhotonNetwork.IsMasterClient ? new int[] { 7, 9, 10, 11 } : new int[] { 0, 1, 2, 4 };
+
+        int myJanggiNum = 0;
+        for (int i = 0; i < 12; i++)
+        {
+            // 현재 슬롯에 장기가 이미 있다면 비우고
+            Transform nowSlotJanggi = slotGridTransform.GetChild(i).Find("Janggi");
+            if (nowSlotJanggi != null)
+            {
+                Destroy(nowSlotJanggi.gameObject);
+            }
+
+            // 초기 위치 슬롯의 장기만 다시 둠
+            if (i == 0 || i == 1 || i == 2 || i == 4 | i == 7 || i == 9 || i == 10 || i == 11)
+            {
+                Janggi janggi = Instantiate(janggiPrefab);
+                RectTransform janggiRectTransform = janggi.GetComponent<RectTransform>();
+
+                janggi.transform.SetParent(slotGridTransform.GetChild(i));
+                janggi.transform.SetAsFirstSibling();
+                janggi.gameObject.name = "Janggi";
+                janggiRectTransform.anchoredPosition = Vector3.zero;
+                janggiRectTransform.sizeDelta = janggiPrefab.GetComponent<RectTransform>().sizeDelta;
+                janggiRectTransform.localScale = Vector3.one;
+
+                switch (i)
+                {
+                    case 0:
+                    case 11:
+                        janggi.janggiType = EJanggiType.JANG;
+                        break;
+                    case 1:
+                    case 10:
+                        janggi.janggiType = EJanggiType.WANG;
+                        break;
+                    case 2:
+                    case 9:
+                        janggi.janggiType = EJanggiType.SANG;
+                        break;
+                    case 4:
+                    case 7:
+                        janggi.janggiType = EJanggiType.JA;
+                        break;
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
+
+                if (myJanggiNum < myJanggiNums.Length && i == myJanggiNums[myJanggiNum])
+                {
+                    janggi.isMyJanggi = true;
+                    myJanggiNum++;
+                }
+            }
+        }
 
         StartCoroutine(StartGameCoroutine());
     }
@@ -231,12 +287,19 @@ public class IngameScene : MonoBehaviour
         enemyProfileImage.texture = (request.downloadHandler as DownloadHandlerTexture).texture;
     }
 
-    public void OnDropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    public void OnDropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum, bool isKill)
     {
         print($"{srcHeightNum},{srcWidthNum}의 장기를 {destHeightNum},{destWidthNum} 위치로 둡니다.");
 
-        SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
+        SoundManager.Instance.PlaySND(isKill ? SSfxName.KILL_JANGGI_SFX : SSfxName.JANGGI_DROP_SFX);
 
+        // 목적 슬롯의 장기를 먹은 경우, 해당 장기 삭제
+        if (isKill)
+        {
+            Destroy(janggiSlots[destHeightNum, destWidthNum].transform.Find("Janggi").gameObject);
+        }
+
+        // 시작 슬롯의 장기를 목적 슬롯으로 이동
         RectTransform janggiRectTransform = janggiSlots[srcHeightNum, srcWidthNum].transform.Find("Janggi").GetComponent<RectTransform>();
         janggiRectTransform.SetParent(janggiSlots[destHeightNum, destWidthNum].transform);
         janggiRectTransform.SetAsFirstSibling();
@@ -420,6 +483,45 @@ public class IngameScene : MonoBehaviour
             {
                 janggiSlots[height, width].shadowJanggi.gameObject.SetActive(false);
             }
+        }
+    }
+
+    public void StopGame(bool isMasterWin)
+    {
+        HideShadowJanggi();
+
+        bool isMyWin = PhotonNetwork.IsMasterClient == isMasterWin;
+
+        if (isMyWin)
+        {
+            myScore++;
+        }
+        else
+        {
+            enemyScore++;
+        }
+
+        scoreText.text = $"<color=#00ff00>{myScore}</color> : <color=#ff0000>{enemyScore}</color>";
+
+        if (myScore >= 2 || enemyScore >= 2)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                NetworkManager.Instance.EndGame();
+            }
+        }
+        else
+        {
+            StartGame();
+        }
+    }
+
+    public void EndGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 임시로 항복과 동일하게 처리
+            OnClickSurrenderBtn();
         }
     }
 }

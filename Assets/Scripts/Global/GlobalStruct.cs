@@ -28,4 +28,5 @@ public struct SSfxName
     public const string GAME_START_SFX = "GameStart";
     public const string COUNT_DOWN_SFX = "CountDown";
     public const string TIMER_SFX = "Timer";
+    public const string KILL_JANGGI_SFX = "KillJanggi";
 }

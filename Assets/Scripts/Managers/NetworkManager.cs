@@ -150,16 +150,35 @@ public class NetworkManager : Singleton<NetworkManager>
         FindObjectOfType<IngameScene>().SetTurn(isMasterTurn);
     }
 
-    public void DropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    public void DropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum, bool isKill)
     {
         photonView.RPC(nameof(DropJanggiRPC), RpcTarget.Others,
-            srcHeightNum, srcWidthNum, destHeightNum, destWidthNum);
+            srcHeightNum, srcWidthNum, destHeightNum, destWidthNum, isKill);
     }
 
-    [PunRPC] private void DropJanggiRPC(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum)
+    [PunRPC] private void DropJanggiRPC(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum, bool isKill)
     {
-        FindObjectOfType<IngameScene>().OnDropJanggi(srcHeightNum, srcWidthNum, destHeightNum, destWidthNum);
+        FindObjectOfType<IngameScene>().OnDropJanggi(srcHeightNum, srcWidthNum, destHeightNum, destWidthNum, isKill);
     }
 
+    public void StopGame(bool isMasterWin)
+    {
+        photonView.RPC(nameof(StopGameRPC), RpcTarget.All, isMasterWin);
+    }
+
+    [PunRPC] private void StopGameRPC(bool isMasterWin)
+    {
+        FindObjectOfType<IngameScene>().StopGame(isMasterWin);
+    }
+
+    public void EndGame()
+    {
+        photonView.RPC(nameof(EndGameRPC), RpcTarget.All);
+    }
+
+    [PunRPC] private void EndGameRPC()
+    {
+        FindObjectOfType<IngameScene>().EndGame();
+    }
     #endregion
 }
