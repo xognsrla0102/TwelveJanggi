@@ -188,8 +188,9 @@ public class IngameScene : MonoBehaviour
     }
 
     private void OnClickSurrenderBtn()
-    {        
-        NetworkManager.Instance.LeaveRoom();
+    {
+        bool isMasterWin = !PhotonNetwork.IsMasterClient;
+        NetworkManager.Instance.EndGame(isMasterWin);
     }
 
     public void SetTurn(bool isMasterTurn)
