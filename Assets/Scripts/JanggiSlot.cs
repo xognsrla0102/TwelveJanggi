@@ -81,7 +81,8 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (eventData.pointerDrag != null)
         {
-            Transform originParent = eventData.pointerDrag.GetComponent<Janggi>().originParent;
+            Janggi draggingJanggi = eventData.pointerDrag.GetComponent<Janggi>();
+            Transform originParent = draggingJanggi.originParent;
 
             // 원래 슬롯으로 제자리 두는 경우는 위치만 롤백 처리
             if (transform == originParent)
@@ -120,9 +121,46 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                     isKill = true;
 
                     // 왕을 죽일 경우 게임 오버 처리
-                    if (janggi.janggiType == EJanggiType.WANG)
+                    if (janggi.JanggiType == EJanggiType.WANG)
                     {
                         isGameOver = true;
+                    }
+                }
+            }
+
+            // 옮기고 있는 장기가 자 이고 현재 드랍한 위치가 상대 진영일 경우 후로 변경
+            if (draggingJanggi.JanggiType == EJanggiType.JA)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    if (heightNum == 0)
+                    {
+                        draggingJanggi.SetJanggi(EJanggiType.HU);
+                    }
+                }
+                else
+                {
+                    if (heightNum == 3)
+                    {
+                        draggingJanggi.SetJanggi(EJanggiType.HU);
+                    }
+                }
+            }
+            // 후일 경우 반대로 상대 진영 벗어나면 자로 변경
+            else if (draggingJanggi.JanggiType == EJanggiType.HU)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    if (heightNum != 0)
+                    {
+                        draggingJanggi.SetJanggi(EJanggiType.JA);
+                    }
+                }
+                else
+                {
+                    if (heightNum != 3)
+                    {
+                        draggingJanggi.SetJanggi(EJanggiType.JA);
                     }
                 }
             }

@@ -30,7 +30,9 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 {
     public bool isMyJanggi;
 
-    public EJanggiType janggiType;
+    private EJanggiType janggiType;
+    public EJanggiType JanggiType => janggiType;
+
     [SerializeField] private Text janggiText;
     [SerializeField] private bool isShadowJanggi;
     [SerializeField] private GameObject[] dirs;

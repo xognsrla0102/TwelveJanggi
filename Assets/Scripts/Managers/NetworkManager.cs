@@ -86,6 +86,9 @@ public class NetworkManager : Singleton<NetworkManager>
         base.OnPlayerEnteredRoom(newPlayer);
         print($"{newPlayer.NickName}가 방에 참가");
 
+        // 게임 시작 후에는 유저가 못 들어옴 (게임 종료 후, 유저 나가면 다른 유저 들어오는 것 방지)
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+
         print("게임 씬으로 이동");
         PhotonNetwork.LoadLevel(SSceneName.INGAME_SCENE);
     }
@@ -107,11 +110,7 @@ public class NetworkManager : Singleton<NetworkManager>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-
         print($"{otherPlayer.NickName}가 떠남");
-
-        print("누군가 방을 나가면 나도 방 나감, 자동으로 메인 씬으로 이동");
-        LeaveRoom();
     }
     #endregion
 
@@ -171,14 +170,14 @@ public class NetworkManager : Singleton<NetworkManager>
         FindObjectOfType<IngameScene>().StopGame(isMasterWin);
     }
 
-    public void EndGame()
+    public void EndGame(bool isMasterWin)
     {
-        photonView.RPC(nameof(EndGameRPC), RpcTarget.All);
+        photonView.RPC(nameof(EndGameRPC), RpcTarget.All, isMasterWin);
     }
 
-    [PunRPC] private void EndGameRPC()
+    [PunRPC] private void EndGameRPC(bool isMasterWin)
     {
-        FindObjectOfType<IngameScene>().EndGame();
+        FindObjectOfType<IngameScene>().EndGame(isMasterWin);
     }
     #endregion
 }

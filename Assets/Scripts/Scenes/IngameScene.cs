@@ -23,6 +23,7 @@ public class IngameScene : MonoBehaviour
     [SerializeField] private Button surrenderBtn;
 
     [SerializeField] private GameObject dimObj;
+    [SerializeField] private GameResultPopup gameResultPopup;
     [SerializeField] private TextMeshProUGUI countDownText;
 
     [HideInInspector] public bool isMasterTurn;
@@ -118,19 +119,19 @@ public class IngameScene : MonoBehaviour
                 {
                     case 0:
                     case 11:
-                        janggi.janggiType = EJanggiType.JANG;
+                        janggi.SetJanggi(EJanggiType.JANG);
                         break;
                     case 1:
                     case 10:
-                        janggi.janggiType = EJanggiType.WANG;
+                        janggi.SetJanggi(EJanggiType.WANG);
                         break;
                     case 2:
                     case 9:
-                        janggi.janggiType = EJanggiType.SANG;
+                        janggi.SetJanggi(EJanggiType.SANG);
                         break;
                     case 4:
                     case 7:
-                        janggi.janggiType = EJanggiType.JA;
+                        janggi.SetJanggi(EJanggiType.JA);
                         break;
                     default:
                         Debug.Assert(false);
@@ -249,11 +250,11 @@ public class IngameScene : MonoBehaviour
                 stopTimer = true;
                 timerText.text = "00.00";
 
-                // 방장이 턴 종료 처리 (다음 턴 해야 하나.. 게임오버 해야 하나..)
+                // 패배 처리
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    int nextUserIdx = ((isMasterTurn ? 1 : 0) + 1) % 2;
-                    NetworkManager.Instance.SelectNextTurnUser(nextUserIdx == 1);
+                    bool isMasterWin = isMasterTurn == false;
+                    NetworkManager.Instance.StopGame(isMasterWin);
                 }
             }
         }
@@ -304,16 +305,57 @@ public class IngameScene : MonoBehaviour
         janggiRectTransform.SetParent(janggiSlots[destHeightNum, destWidthNum].transform);
         janggiRectTransform.SetAsFirstSibling();
         janggiRectTransform.anchoredPosition = Vector3.zero;
+
+
+        // 장기가 자이면서 목적 슬롯이 적 진영이면 장기 타입을 후로 변경
+        Janggi janggi = janggiRectTransform.GetComponent<Janggi>();
+        if (janggi.JanggiType == EJanggiType.JA)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                // 적 진영
+                if (destHeightNum == 0)
+                {
+                    janggi.SetJanggi(EJanggiType.HU);
+                }
+            }
+            else
+            {
+                if (destHeightNum == 3)
+                {
+                    janggi.SetJanggi(EJanggiType.HU);
+                }
+            }
+        }
+        // 반대로 후이면서 목적 슬롯이 적 진영 벗어나면 자로 변경
+        else if (janggi.JanggiType == EJanggiType.HU)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                if (destHeightNum != 0)
+                {
+                    janggi.SetJanggi(EJanggiType.JA);
+                }
+            }
+            else
+            {
+                if (destHeightNum != 3)
+                {
+                    janggi.SetJanggi(EJanggiType.JA);
+                }
+            }
+        }
     }
 
     public void ShowShadowJanggi(int slotHeightNum, int slotWidthNum, EJanggiType janggiType)
     {
-        int deltaY, deltaX;
+        int deltaY;
         int nowY, nowX;
         Transform slotJanggiTransform;
 
         switch (janggiType)
         {
+            #region 장
             case EJanggiType.JANG:
                 for (int height = -1; height <= 1; height++)
                 {
@@ -364,6 +406,8 @@ public class IngameScene : MonoBehaviour
                     }
                 }
                 break;
+            #endregion
+            #region 상
             case EJanggiType.SANG:
                 for (int height = -1; height <= 1; height++)
                 {
@@ -411,6 +455,8 @@ public class IngameScene : MonoBehaviour
                     }
                 }
                 break;
+            #endregion
+            #region 왕
             case EJanggiType.WANG:
                 for (int height = -1; height <= 1; height++)
                 {
@@ -444,6 +490,8 @@ public class IngameScene : MonoBehaviour
                     }
                 }
                 break;
+            #endregion
+            #region 자
             case EJanggiType.JA:
                 deltaY = PhotonNetwork.IsMasterClient ? -1 : 1;
                 nowY = slotHeightNum + deltaY;
@@ -464,11 +512,83 @@ public class IngameScene : MonoBehaviour
                 }
 
                 janggiSlots[nowY, slotWidthNum].shadowJanggi.gameObject.SetActive(true);
-                janggiSlots[nowY, slotWidthNum].shadowJanggi.SetJanggi(janggiType);
+
+                // 적 진영으로 이동하게 될 자는 후로 보이도록 설정
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    janggiSlots[nowY, slotWidthNum].shadowJanggi.SetJanggi(nowY == 0 ? EJanggiType.HU : janggiType);
+                }
+                else
+                {
+                    janggiSlots[nowY, slotWidthNum].shadowJanggi.SetJanggi(nowY == 3 ? EJanggiType.HU : janggiType);
+                }
                 break;
+            #endregion
+            #region 후
             case EJanggiType.HU:
-                // 후 해야함
+                for (int height = -1; height <= 1; height++)
+                {
+                    for (int width = -1; width <= 1; width++)
+                    {
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            if (height == 1)
+                            {
+                                if (width == -1 || width == 1)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (height == -1)
+                            {
+                                if (width == -1 || width == 1)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+
+                        if (height == 0 && width == 0)
+                        {
+                            continue;
+                        }
+
+                        nowY = slotHeightNum + height;
+                        nowX = slotWidthNum + width;
+
+                        if (nowY < 0 || nowY > 3 || nowX < 0 || nowX > 2)
+                        {
+                            continue;
+                        }
+
+                        // 해당 슬롯에 내 장기가 있을 경우 쉐도우 장기 활성화 안 함
+                        slotJanggiTransform = janggiSlots[nowY, nowX].transform.Find("Janggi");
+                        if (slotJanggiTransform != null)
+                        {
+                            if (slotJanggiTransform.GetComponent<Janggi>().isMyJanggi)
+                            {
+                                continue;
+                            }
+                        }
+
+                        janggiSlots[nowY, nowX].shadowJanggi.gameObject.SetActive(true);
+
+                        // 적 진영을 나오게 될 후는 자로 설정
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            janggiSlots[nowY, nowX].shadowJanggi.SetJanggi(nowY != 0 ? EJanggiType.JA : janggiType);
+                        }
+                        else
+                        {
+                            janggiSlots[nowY, nowX].shadowJanggi.SetJanggi(nowY != 3 ? EJanggiType.JA : janggiType);
+                        }
+                    }
+                }
                 break;
+            #endregion
             default:
                 Debug.Assert(false);
                 break;
@@ -507,7 +627,7 @@ public class IngameScene : MonoBehaviour
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                NetworkManager.Instance.EndGame();
+                NetworkManager.Instance.EndGame(isMasterWin);
             }
         }
         else
@@ -516,12 +636,22 @@ public class IngameScene : MonoBehaviour
         }
     }
 
-    public void EndGame()
+    public void EndGame(bool isMasterWin)
     {
-        if (PhotonNetwork.IsMasterClient)
+        stopTimer = true;
+
+        dimObj.SetActive(true);
+
+        bool isMyWin = PhotonNetwork.IsMasterClient == isMasterWin;
+
+        if (isMyWin)
         {
-            // 임시로 항복과 동일하게 처리
-            OnClickSurrenderBtn();
+            gameResultPopup.SetResultPopup(profileImage.texture, userNameText.text);
         }
+        else
+        {
+            gameResultPopup.SetResultPopup(enemyProfileImage.texture, enemyUserNameText.text);
+        }
+        gameResultPopup.gameObject.SetActive(true);
     }
 }
