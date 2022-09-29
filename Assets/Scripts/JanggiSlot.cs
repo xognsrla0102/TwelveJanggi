@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
-using ExitGames.Client.Photon;
 
 public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
@@ -79,15 +78,22 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null)
+        if (eventData.pointerDrag == null)
         {
-            Janggi draggingJanggi = eventData.pointerDrag.GetComponent<Janggi>();
+            return;
+        }
+
+        Janggi draggingJanggi = eventData.pointerDrag.GetComponent<Janggi>();
+        TakeJanggi draggingTakeJanggi = eventData.pointerDrag.GetComponent<TakeJanggi>();
+
+        // 일반 장기를 드랍하는 경우
+        if (draggingJanggi != null)
+        {
             Transform originParent = draggingJanggi.originParent;
 
-            // 원래 슬롯으로 제자리 두는 경우는 위치만 롤백 처리
+            // 원래 슬롯으로 제자리 두는 경우는 무시
             if (transform == originParent)
             {
-                DropJanggi(eventData.pointerDrag, transform);
                 return;
             }
 
@@ -116,15 +122,20 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 // 상대방 장기일 경우 먹기 처리
                 else
                 {
-                    // 임시로 해당 장기 오브젝트 삭제
-                    Destroy(mySlotJanggiTransform.gameObject);
-                    isKill = true;
-
                     // 왕을 죽일 경우 게임 오버 처리
                     if (janggi.JanggiType == EJanggiType.WANG)
                     {
                         isGameOver = true;
                     }
+                    // 다른 타입일 경우 포로 획득 처리
+                    else
+                    {
+                        NetworkManager.Instance.GetEnemyJanggi(PhotonNetwork.IsMasterClient, janggi.JanggiType);
+                    }
+
+                    // 해당 장기 오브젝트 삭제
+                    Destroy(mySlotJanggiTransform.gameObject);
+                    isKill = true;
                 }
             }
 
@@ -171,7 +182,7 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             // 현재 옮길 장기의 시작 슬롯과, 목표 슬롯 위치를 전달한다.
             JanggiSlot srcJanggiSlot = originParent.GetComponent<JanggiSlot>();
             NetworkManager.Instance.DropJanggi(srcJanggiSlot.heightNum, srcJanggiSlot.widthNum, heightNum, widthNum, isKill);
-            
+
             if (isGameOver)
             {
                 NetworkManager.Instance.StopGame(PhotonNetwork.IsMasterClient);
@@ -182,6 +193,11 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 int nextUserIdx = ((FindObjectOfType<IngameScene>().isMasterTurn ? 1 : 0) + 1) % 2;
                 NetworkManager.Instance.SelectNextTurnUser(nextUserIdx == 1);
             }
+        }
+        // 먹은 장기를 드랍하는 경우
+        else if (draggingTakeJanggi != null)
+        {
+            
         }
     }
 

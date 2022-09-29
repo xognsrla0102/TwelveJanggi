@@ -1,40 +1,16 @@
-using Photon.Pun;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using Photon.Pun;
 
-public enum EJanggiType
-{
-    JANG,
-    SANG,
-    WANG,
-    JA,
-    HU,
-    NUMS
-}
-
-public enum EDirType
-{
-    LEFT_TOP,
-    CENTER_TOP,
-    RIGHT_TOP,
-    LEFT_MID,
-    RIGHT_MID,
-    LEFT_BOTTOM,
-    CENTER_BOTTOM,
-    RIGHT_BOTTOM,
-    NUMS
-}
-
-public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class TakeJanggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool isMyJanggi;
 
     private EJanggiType janggiType;
     public EJanggiType JanggiType => janggiType;
 
-    [SerializeField] private Text janggiText;
-    [SerializeField] private bool isShadowJanggi;
+    [SerializeField] private Text janggiText;   
     [SerializeField] private GameObject[] dirs;
 
     [HideInInspector] public CanvasGroup canvasGroup;
@@ -56,12 +32,13 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         if (isMyJanggi)
         {
             outLine.effectColor = new Color(0f, 140f / 255f, 0f);
-            transform.rotation = Quaternion.identity;
         }
         else
         {
             outLine.effectColor = new Color(1f, 0f, 0f);
-            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 180f));
+
+            // 내 장기가 아닌 경우 드래그 드랍 못하게 함
+            canvasGroup.blocksRaycasts = false;
         }
     }
 
@@ -133,8 +110,7 @@ public class Janggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         // 드랍 시 슬롯에 레이캐스트 충돌 되는 것 방지
         canvasGroup.blocksRaycasts = false;
 
-        JanggiSlot janggiSlot = originParent.GetComponent<JanggiSlot>();
-        ingameScene.ShowShadowJanggi(janggiSlot.heightNum, janggiSlot.widthNum, janggiType);
+        ingameScene.ShowShadowJanggiForTakeJanggi(janggiType);
     }
 
     public void OnDrag(PointerEventData eventData)

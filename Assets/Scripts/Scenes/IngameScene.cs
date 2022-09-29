@@ -11,12 +11,15 @@ public class IngameScene : MonoBehaviour
     [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private RawImage profileImage;
     [SerializeField] private GameObject myTurnOutLine;
+    [SerializeField] private TakeJanggiSlot[] myTakeJanggiSlots;
 
     [Header("상대 프로필")]
     [SerializeField] private TextMeshProUGUI enemyUserNameText;
     [SerializeField] private RawImage enemyProfileImage;
     [SerializeField] private GameObject enemyTurnOutLine;
+    [SerializeField] private TakeJanggiSlot[] enemyTakeJanggiSlots;
 
+    [Header("게임 정보")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI scoreText;
 
@@ -105,12 +108,12 @@ public class IngameScene : MonoBehaviour
             // 초기 위치 슬롯의 장기만 다시 둠
             if (i == 0 || i == 1 || i == 2 || i == 4 | i == 7 || i == 9 || i == 10 || i == 11)
             {
-                Janggi janggi = Instantiate(janggiPrefab);
+                Janggi janggi = Instantiate(janggiPrefab, slotGridTransform.GetChild(i));
                 RectTransform janggiRectTransform = janggi.GetComponent<RectTransform>();
 
-                janggi.transform.SetParent(slotGridTransform.GetChild(i));
-                janggi.transform.SetAsFirstSibling();
                 janggi.gameObject.name = "Janggi";
+
+                janggiRectTransform.SetAsFirstSibling();
                 janggiRectTransform.anchoredPosition = Vector3.zero;
                 janggiRectTransform.sizeDelta = janggiPrefab.GetComponent<RectTransform>().sizeDelta;
                 janggiRectTransform.localScale = Vector3.one;
@@ -596,6 +599,24 @@ public class IngameScene : MonoBehaviour
         }
     }
 
+    public void ShowShadowJanggiForTakeJanggi(EJanggiType janggiType)
+    {
+        switch (janggiType)
+        {
+            case EJanggiType.JANG:
+                break;
+            case EJanggiType.SANG:
+                break;
+            case EJanggiType.WANG:
+                break;
+            case EJanggiType.JA:
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+        }
+    }
+
     public void HideShadowJanggi()
     {
         for (int height = 0; height < 4; height++)
@@ -603,6 +624,52 @@ public class IngameScene : MonoBehaviour
             for (int width = 0; width < 3; width++)
             {
                 janggiSlots[height, width].shadowJanggi.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void GetEnemyJanggi(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
+    {
+        bool isMine = PhotonNetwork.IsMasterClient == isMasterGetEnemyJanggi;
+
+        TakeJanggi takeJanggiPrefab = Resources.Load<TakeJanggi>("TakeJanggi");
+
+        // 내 프로필에 인질 추가
+        if (isMine)
+        {
+            foreach (var takeJanggiSlot in myTakeJanggiSlots)
+            {
+                if (takeJanggiSlot.janggiExist)
+                {
+                    continue;
+                }
+
+                TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
+                takeJanggi.SetJanggi(janggiType);
+
+                RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
+                takeJanggiRectTransform.anchoredPosition = Vector3.zero;
+                takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
+                takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
+            }
+        }
+        // 상대 프로필에 인질 추가
+        else
+        {
+            foreach (var takeJanggiSlot in enemyTakeJanggiSlots)
+            {
+                if (takeJanggiSlot.janggiExist)
+                {
+                    continue;
+                }
+
+                TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
+                takeJanggi.SetJanggi(janggiType);
+
+                RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
+                takeJanggiRectTransform.anchoredPosition = Vector3.zero;
+                takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
+                takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
             }
         }
     }
