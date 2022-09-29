@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ESoundType
@@ -56,5 +56,10 @@ public class SoundManager : Singleton<SoundManager>
         AudioSource sfxSource = SfxSource;
         sfxSource.clip = clips[name];
         sfxSource.PlayOneShot(sfxSource.clip);
+    }
+
+    public void StopBGM()
+    {
+        BgmSource.Stop();
     }
 }

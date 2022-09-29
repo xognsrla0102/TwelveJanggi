@@ -5871,13 +5871,19 @@ MonoBehaviour:
   - {fileID: 981839562}
   - {fileID: 1202523128}
   - {fileID: 985334708}
+  - {fileID: 1236616733}
+  - {fileID: 842246841}
+  - {fileID: 309732027}
   enemyUserNameText: {fileID: 299002287}
   enemyProfileImage: {fileID: 644814635}
   enemyTurnOutLine: {fileID: 684715711}
   enemyTakeJanggiSlots:
   - {fileID: 303232457}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1145051973}
+  - {fileID: 1223482794}
+  - {fileID: 703590294}
+  - {fileID: 1237724523}
+  - {fileID: 1234745099}
   timerText: {fileID: 1106167582}
   scoreText: {fileID: 1319734707}
   surrenderBtn: {fileID: 1661577511}

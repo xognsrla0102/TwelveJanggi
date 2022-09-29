@@ -160,12 +160,23 @@ public class NetworkManager : Singleton<NetworkManager>
         FindObjectOfType<IngameScene>().OnDropJanggi(srcHeightNum, srcWidthNum, destHeightNum, destWidthNum, isKill);
     }
 
+    public void DropTakeJanggi(int siblingIndex, int destHeightNum, int destWidthNum)
+    {
+        photonView.RPC(nameof(DropTakeJanggiRPC), RpcTarget.Others,
+            siblingIndex, destHeightNum, destWidthNum);
+    }
+
+    [PunRPC] private void DropTakeJanggiRPC(int siblingIndex, int destHeightNum, int destWidthNum)
+    {
+        FindObjectOfType<IngameScene>().OnDropTakeJanggi(siblingIndex, destHeightNum, destWidthNum);
+    }
+
     public void GetEnemyJanggi(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
     {
         photonView.RPC(nameof(GetEnemyJanggiRPC), RpcTarget.All, isMasterGetEnemyJanggi, janggiType);
     }
 
-    private void GetEnemyJanggiRPC(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
+    [PunRPC] private void GetEnemyJanggiRPC(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
     {
         FindObjectOfType<IngameScene>().GetEnemyJanggi(isMasterGetEnemyJanggi, janggiType);
     }

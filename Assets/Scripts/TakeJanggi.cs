@@ -10,10 +10,11 @@ public class TakeJanggi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     private EJanggiType janggiType;
     public EJanggiType JanggiType => janggiType;
 
+    public CanvasGroup canvasGroup;
+
     [SerializeField] private Text janggiText;   
     [SerializeField] private GameObject[] dirs;
 
-    [HideInInspector] public CanvasGroup canvasGroup;
     [HideInInspector] public Transform originParent;
 
     private Transform gameUiCanvas;

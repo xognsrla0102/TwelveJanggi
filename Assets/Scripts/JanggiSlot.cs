@@ -119,24 +119,24 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                     DropJanggi(eventData.pointerDrag, originParent);
                     return;
                 }
-                // 상대방 장기일 경우 먹기 처리
+
+                // 아니라면 상대방 장기이므로, 먹기 처리
+
+                // 왕을 죽일 경우 게임 오버 처리
+                if (janggi.JanggiType == EJanggiType.WANG)
+                {
+                    isGameOver = true;
+                }
+                // 다른 타입일 경우 포로 획득 처리
                 else
                 {
-                    // 왕을 죽일 경우 게임 오버 처리
-                    if (janggi.JanggiType == EJanggiType.WANG)
-                    {
-                        isGameOver = true;
-                    }
-                    // 다른 타입일 경우 포로 획득 처리
-                    else
-                    {
-                        NetworkManager.Instance.GetEnemyJanggi(PhotonNetwork.IsMasterClient, janggi.JanggiType);
-                    }
-
-                    // 해당 장기 오브젝트 삭제
-                    Destroy(mySlotJanggiTransform.gameObject);
-                    isKill = true;
+                    // 후를 포로로 얻은 경우 자로 획득, 그 외에는 타입 그대로 획득
+                    NetworkManager.Instance.GetEnemyJanggi(PhotonNetwork.IsMasterClient, janggi.JanggiType == EJanggiType.HU ? EJanggiType.JA : janggi.JanggiType);
                 }
+
+                // 해당 장기 오브젝트 삭제
+                Destroy(mySlotJanggiTransform.gameObject);
+                isKill = true;
             }
 
             // 옮기고 있는 장기가 자 이고 현재 드랍한 위치가 상대 진영일 경우 후로 변경
@@ -179,7 +179,7 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             DropJanggi(eventData.pointerDrag, transform);
             SoundManager.Instance.PlaySND(isKill ? SSfxName.KILL_JANGGI_SFX : SSfxName.JANGGI_DROP_SFX);
 
-            // 현재 옮길 장기의 시작 슬롯과, 목표 슬롯 위치를 전달한다.
+            // 현재 옮길 장기의 시작 슬롯과, 목표 슬롯 위치를 전달
             JanggiSlot srcJanggiSlot = originParent.GetComponent<JanggiSlot>();
             NetworkManager.Instance.DropJanggi(srcJanggiSlot.heightNum, srcJanggiSlot.widthNum, heightNum, widthNum, isKill);
 
@@ -197,7 +197,45 @@ public class JanggiSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 먹은 장기를 드랍하는 경우
         else if (draggingTakeJanggi != null)
         {
-            
+            // 현재 슬롯에 쉐도우 장기가 활성화 안되어있으면 드랍 못함
+            if (shadowJanggi.gameObject.activeInHierarchy == false)
+            {
+                DropJanggi(eventData.pointerDrag, draggingTakeJanggi.originParent);
+                return;
+            }
+
+            TakeJanggiSlot takeJanggiSlot = draggingTakeJanggi.originParent.GetComponent<TakeJanggiSlot>();
+            takeJanggiSlot.janggiExist = false;
+
+            // 먹은 장기와 똑같은 타입을 이 슬롯에 생성하여 배치
+            Janggi janggiPrefab = Resources.Load<Janggi>("Janggi");
+            Janggi janggi = Instantiate(janggiPrefab, transform);
+            RectTransform janggiRectTransform = janggi.GetComponent<RectTransform>();
+
+            janggi.gameObject.name = "Janggi";
+            janggi.isMyJanggi = true;
+            janggi.SetJanggi(draggingTakeJanggi.JanggiType);
+
+            janggiRectTransform.SetAsFirstSibling();
+            janggiRectTransform.anchoredPosition = Vector3.zero;
+            janggiRectTransform.sizeDelta = janggiPrefab.GetComponent<RectTransform>().sizeDelta;
+            janggiRectTransform.localScale = Vector3.one;
+
+            SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
+
+            // TakeJanggiSlot 오브젝트의 정보를 얻기 위한 인덱스 번호와 목표 슬롯 위치를 전달
+            NetworkManager.Instance.DropTakeJanggi(takeJanggiSlot.transform.GetSiblingIndex(), heightNum, widthNum);
+
+            // 먹은 장기를 삭제
+            Destroy(draggingTakeJanggi.gameObject);
+
+            IngameScene ingameScene = FindObjectOfType<IngameScene>();
+            // 바로 장기를 없애서 OnEndDrag에 있는 HideShadowJanggi 함수 호출안되서 직접 호출
+            ingameScene.HideShadowJanggi();
+
+            // 턴 종료 처리
+            int nextUserIdx = ((ingameScene.isMasterTurn ? 1 : 0) + 1) % 2;
+            NetworkManager.Instance.SelectNextTurnUser(nextUserIdx == 1);
         }
     }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public class GameResultPopup : MonoBehaviour
 {
@@ -32,6 +33,17 @@ public class GameResultPopup : MonoBehaviour
 
     public void SetResultPopup(Texture winnerUserProfileTexture, string winnerUserName)
     {
+        SoundManager.Instance.StopBGM();
+
+        if (PhotonNetwork.LocalPlayer.NickName.Equals(winnerUserName))
+        {
+            SoundManager.Instance.PlaySND(SSfxName.WIN_SFX);
+        }
+        else
+        {
+            SoundManager.Instance.PlaySND(SSfxName.LOSE_SFX);
+        }
+
         winnerUserProfileImage.texture = winnerUserProfileTexture;
         winnerUserNameText.text = winnerUserName;
     }

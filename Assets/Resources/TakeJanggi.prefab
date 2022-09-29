@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMyJanggi: 0
+  canvasGroup: {fileID: 1044240086924994687}
   janggiText: {fileID: 1044240088154736064}
   dirs:
   - {fileID: 6588406536464133158}
@@ -119,7 +120,6 @@ MonoBehaviour:
   - {fileID: 4097779533586874852}
   - {fileID: 5898919672130047534}
   - {fileID: 1465831360409698636}
-  canvasGroup: {fileID: 0}
   originParent: {fileID: 0}
 --- !u!225 &1044240086924994687
 CanvasGroup:

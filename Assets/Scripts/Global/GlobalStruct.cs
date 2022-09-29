@@ -18,6 +18,7 @@ public struct SBgmName
 {
     public const string MAIN_BGM = "Main";
     public const string INGAME_BGM = "Ingame";
+    public const string LAST_MATCH_BGM = "LastMatch";
 }
 
 public struct SSfxName
@@ -29,4 +30,6 @@ public struct SSfxName
     public const string COUNT_DOWN_SFX = "CountDown";
     public const string TIMER_SFX = "Timer";
     public const string KILL_JANGGI_SFX = "KillJanggi";
+    public const string WIN_SFX = "Win";
+    public const string LOSE_SFX = "Lose";
 }

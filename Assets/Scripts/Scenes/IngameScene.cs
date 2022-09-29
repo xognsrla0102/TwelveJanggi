@@ -81,11 +81,36 @@ public class IngameScene : MonoBehaviour
 
     public void StartGame()
     {
+        // 라스트 매치
+        if (myScore == 1 && enemyScore == 1)
+        {
+            SoundManager.Instance.PlayBGM(SBgmName.LAST_MATCH_BGM);
+        }
+
         myTurnOutLine.SetActive(false);
         enemyTurnOutLine.SetActive(false);
 
         timerText.text = "00.00";
         stopTimer = true;
+
+        // 내 장기와 상대 장기를 모두 비움
+        foreach (var myTakeJanggiSlot in myTakeJanggiSlots)
+        {
+            if (myTakeJanggiSlot.janggiExist)
+            {
+                myTakeJanggiSlot.janggiExist = false;
+                Destroy(myTakeJanggiSlot.transform.Find("TakeJanggi").gameObject);
+            }
+        }
+
+        foreach (var enemyTakeJanggiSlot in enemyTakeJanggiSlots)
+        {
+            if (enemyTakeJanggiSlot.janggiExist)
+            {
+                enemyTakeJanggiSlot.janggiExist = false;
+                Destroy(enemyTakeJanggiSlot.transform.Find("TakeJanggi").gameObject);
+            }
+        }
 
         // 장기 생성
         Transform slotGridTransform = GameObject.Find("SlotGrid").transform;
@@ -228,6 +253,16 @@ public class IngameScene : MonoBehaviour
             }
         }
 
+        // 내가 가져온 적 장기 옮길 수 있는지 세팅
+        foreach (var takeJanggiSlot in myTakeJanggiSlots)
+        {
+            if (takeJanggiSlot.janggiExist)
+            {
+                TakeJanggi takeJanggi = takeJanggiSlot.transform.Find("TakeJanggi").GetComponent<TakeJanggi>();
+                takeJanggi.canvasGroup.blocksRaycasts = isMyTurn;
+            }
+        }
+
         // 타이머 작동 시작
         turnStartTime = Time.time;
         stopTimer = false;
@@ -294,8 +329,6 @@ public class IngameScene : MonoBehaviour
 
     public void OnDropJanggi(int srcHeightNum, int srcWidthNum, int destHeightNum, int destWidthNum, bool isKill)
     {
-        print($"{srcHeightNum},{srcWidthNum}의 장기를 {destHeightNum},{destWidthNum} 위치로 둡니다.");
-
         SoundManager.Instance.PlaySND(isKill ? SSfxName.KILL_JANGGI_SFX : SSfxName.JANGGI_DROP_SFX);
 
         // 목적 슬롯의 장기를 먹은 경우, 해당 장기 삭제
@@ -311,41 +344,120 @@ public class IngameScene : MonoBehaviour
         janggiRectTransform.anchoredPosition = Vector3.zero;
 
 
-        // 장기가 자이면서 목적 슬롯이 적 진영이면 장기 타입을 후로 변경
+        // 적 장기가 자이면서 목적 슬롯이 내 진영이면 장기 타입을 후로 변경
         Janggi janggi = janggiRectTransform.GetComponent<Janggi>();
+
         if (janggi.JanggiType == EJanggiType.JA)
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                // 적 진영
-                if (destHeightNum == 0)
+                // 내 진영
+                if (destHeightNum == 3)
                 {
                     janggi.SetJanggi(EJanggiType.HU);
                 }
             }
             else
             {
-                if (destHeightNum == 3)
+                if (destHeightNum == 0)
                 {
                     janggi.SetJanggi(EJanggiType.HU);
                 }
             }
         }
-        // 반대로 후이면서 목적 슬롯이 적 진영 벗어나면 자로 변경
+        // 반대로 후이면서 목적 슬롯이 내 진영 벗어나면 자로 변경
         else if (janggi.JanggiType == EJanggiType.HU)
         {
             if (PhotonNetwork.IsMasterClient)
+            {
+                if (destHeightNum != 3)
+                {
+                    janggi.SetJanggi(EJanggiType.JA);
+                }
+            }
+            else
             {
                 if (destHeightNum != 0)
                 {
                     janggi.SetJanggi(EJanggiType.JA);
                 }
             }
-            else
+        }
+    }
+
+    public void OnDropTakeJanggi(int siblingIndex, int destHeightNum, int destWidthNum)
+    {
+        SoundManager.Instance.PlaySND(SSfxName.JANGGI_DROP_SFX);
+
+        // 장기 비워주고
+        TakeJanggiSlot takeJanggiSlot = enemyTakeJanggiSlots[siblingIndex];
+        takeJanggiSlot.janggiExist = false;
+
+        TakeJanggi takeJanggi = takeJanggiSlot.transform.Find("TakeJanggi").GetComponent<TakeJanggi>();        
+
+        // 적의 TakeJanggi와 똑같은 장기를 보드판에 배치
+        Janggi janggiPrefab = Resources.Load<Janggi>("Janggi");
+        Janggi janggi = Instantiate(janggiPrefab, janggiSlots[destHeightNum, destWidthNum].transform);
+        RectTransform janggiRectTransform = janggi.GetComponent<RectTransform>();
+
+        janggi.gameObject.name = "Janggi";
+        janggi.SetJanggi(takeJanggi.JanggiType);
+
+        janggiRectTransform.SetAsFirstSibling();
+        janggiRectTransform.anchoredPosition = Vector3.zero;
+        janggiRectTransform.sizeDelta = janggiPrefab.GetComponent<RectTransform>().sizeDelta;
+        janggiRectTransform.localScale = Vector3.one;
+
+        // 적의 TakeJanggi 제거
+        Destroy(takeJanggi.gameObject);
+    }
+
+    public void GetEnemyJanggi(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
+    {
+        bool isMine = PhotonNetwork.IsMasterClient == isMasterGetEnemyJanggi;
+
+        TakeJanggi takeJanggiPrefab = Resources.Load<TakeJanggi>("TakeJanggi");
+
+        // 내 프로필에 인질 추가
+        if (isMine)
+        {
+            foreach (var takeJanggiSlot in myTakeJanggiSlots)
             {
-                if (destHeightNum != 3)
+                if (takeJanggiSlot.janggiExist == false)
                 {
-                    janggi.SetJanggi(EJanggiType.JA);
+                    takeJanggiSlot.janggiExist = true;
+
+                    TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
+                    takeJanggi.gameObject.name = "TakeJanggi";
+                    takeJanggi.isMyJanggi = true;
+                    takeJanggi.SetJanggi(janggiType);
+
+                    RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
+                    takeJanggiRectTransform.anchoredPosition = Vector3.zero;
+                    takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
+                    takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
+                    break;
+                }
+            }
+        }
+        // 상대 프로필에 인질 추가
+        else
+        {
+            foreach (var takeJanggiSlot in enemyTakeJanggiSlots)
+            {
+                if (takeJanggiSlot.janggiExist == false)
+                {
+                    takeJanggiSlot.janggiExist = true;
+
+                    TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
+                    takeJanggi.gameObject.name = "TakeJanggi";
+                    takeJanggi.SetJanggi(janggiType);
+
+                    RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
+                    takeJanggiRectTransform.anchoredPosition = Vector3.zero;
+                    takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
+                    takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
+                    break;
                 }
             }
         }
@@ -517,7 +629,7 @@ public class IngameScene : MonoBehaviour
 
                 janggiSlots[nowY, slotWidthNum].shadowJanggi.gameObject.SetActive(true);
 
-                // 적 진영으로 이동하게 될 자는 후로 보이도록 설정
+                // 적 진영으로 이동하게 될 '자'는 '후'로 보이도록 설정
                 if (PhotonNetwork.IsMasterClient)
                 {
                     janggiSlots[nowY, slotWidthNum].shadowJanggi.SetJanggi(nowY == 0 ? EJanggiType.HU : janggiType);
@@ -604,12 +716,38 @@ public class IngameScene : MonoBehaviour
         switch (janggiType)
         {
             case EJanggiType.JANG:
-                break;
             case EJanggiType.SANG:
-                break;
-            case EJanggiType.WANG:
-                break;
             case EJanggiType.JA:
+                // 적 진영을 제외한 모든 곳에 쉐도우 장기 설정
+                foreach (var janggiSlot in janggiSlots)
+                {
+                    // 해당 슬롯에 장기가 있을 경우 무시
+                    if (janggiSlot.transform.Find("Janggi") != null)
+                    {
+                        continue;
+                    }
+
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        if (janggiSlot.heightNum == 0)
+                        {
+                            continue;
+                        }
+
+                        janggiSlot.shadowJanggi.gameObject.SetActive(true);
+                        janggiSlot.shadowJanggi.SetJanggi(janggiType);
+                    }
+                    else
+                    {
+                        if (janggiSlot.heightNum == 3)
+                        {
+                            continue;
+                        }
+
+                        janggiSlot.shadowJanggi.gameObject.SetActive(true);
+                        janggiSlot.shadowJanggi.SetJanggi(janggiType);
+                    }
+                }
                 break;
             default:
                 Debug.Assert(false);
@@ -624,52 +762,6 @@ public class IngameScene : MonoBehaviour
             for (int width = 0; width < 3; width++)
             {
                 janggiSlots[height, width].shadowJanggi.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void GetEnemyJanggi(bool isMasterGetEnemyJanggi, EJanggiType janggiType)
-    {
-        bool isMine = PhotonNetwork.IsMasterClient == isMasterGetEnemyJanggi;
-
-        TakeJanggi takeJanggiPrefab = Resources.Load<TakeJanggi>("TakeJanggi");
-
-        // 내 프로필에 인질 추가
-        if (isMine)
-        {
-            foreach (var takeJanggiSlot in myTakeJanggiSlots)
-            {
-                if (takeJanggiSlot.janggiExist)
-                {
-                    continue;
-                }
-
-                TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
-                takeJanggi.SetJanggi(janggiType);
-
-                RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
-                takeJanggiRectTransform.anchoredPosition = Vector3.zero;
-                takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
-                takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
-            }
-        }
-        // 상대 프로필에 인질 추가
-        else
-        {
-            foreach (var takeJanggiSlot in enemyTakeJanggiSlots)
-            {
-                if (takeJanggiSlot.janggiExist)
-                {
-                    continue;
-                }
-
-                TakeJanggi takeJanggi = Instantiate(takeJanggiPrefab, takeJanggiSlot.transform);
-                takeJanggi.SetJanggi(janggiType);
-
-                RectTransform takeJanggiRectTransform = takeJanggi.GetComponent<RectTransform>();
-                takeJanggiRectTransform.anchoredPosition = Vector3.zero;
-                takeJanggiRectTransform.sizeDelta = takeJanggiPrefab.GetComponent<RectTransform>().sizeDelta;
-                takeJanggiRectTransform.localScale = takeJanggiPrefab.transform.localScale;
             }
         }
     }
