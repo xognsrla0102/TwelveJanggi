@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +9,11 @@ public class InitScene : MonoBehaviour
     [SerializeField] private GameObject[] dontdestroyObjs;
 
     private void Start()
-    {        
+    {
+#if UNITY_ANDROID
+        Application.targetFrameRate = 60;
+#endif
+
         foreach (var obj in dontdestroyObjs)
         {
             DontDestroyOnLoad(obj);
